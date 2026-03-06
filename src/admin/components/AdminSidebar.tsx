@@ -32,6 +32,7 @@ import { useUser } from "@/admin/context/UserContext";
 import { Loader } from "@/admin/components/ui/Loader";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/logo.jpeg";
 
 const getAdminPath = (path: string) => (path === "/" ? "/admin" : `/admin${path}`);
 
@@ -72,11 +73,11 @@ export function AdminSidebar() {
         <Sidebar collapsible="icon" className="border-r-0">
             <SidebarHeader className="border-b border-sidebar-border">
                 <div className="flex items-center gap-3 px-3 py-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 shadow-lg shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out">
-                        <span className="text-white font-bold text-lg">RL</span>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 shadow-lg shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out overflow-hidden">
+                        <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-cover" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                        <span className="truncate font-bold text-sidebar-foreground tracking-tight">Company Name</span>
+                        <span className="truncate font-bold text-sidebar-foreground tracking-tight">Crystal Ceylon Tours</span>
                         <span className="truncate text-xs text-sidebar-foreground/60 font-medium">Admin Panel</span>
                     </div>
                 </div>
