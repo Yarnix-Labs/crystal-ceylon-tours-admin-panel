@@ -99,7 +99,6 @@ export function AdminSidebar() {
                                         className="transition-all duration-300 ease-out"
                                     >
                                         <SidebarMenuButton
-                                            asChild
                                             isActive={isActive}
                                             tooltip={item.title}
                                             className={cn(
@@ -107,15 +106,17 @@ export function AdminSidebar() {
                                                 "transition-all duration-300 ease-out",
                                                 "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10",
                                                 "group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
-                                                !isActive && "text-sidebar-foreground/70 hover:bg-[#fbb03b]/20 hover:text-[#1c5e20] hover:translate-x-0.5 active:scale-[0.98]"
+                                                !isActive && "text-white/70 hover:bg-[#fbb03b] hover:text-white hover:translate-x-0.5 active:scale-[0.98]"
                                             )}
+                                            style={isActive ? {
+                                                backgroundColor: '#fbb03b',
+                                                color: 'white !important',
+                                                fontWeight: '500'
+                                            } : {}}
                                         >
                                             <Link
                                                 to={url}
-                                                className={cn(
-                                                    "flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out",
-                                                    isActive && "bg-[#02aad7] text-white hover:bg-[#02aad7]/90"
-                                                )}
+                                                className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out"
                                             >
                                                 <item.icon
                                                     className={cn(
@@ -143,7 +144,7 @@ export function AdminSidebar() {
                             onClick={handleLogout}
                             disabled={isLoggingOut}
                             tooltip="Logout"
-                            className="h-11 px-3 text-sidebar-foreground/70 hover:bg-[#fbb03b]/20 hover:text-[#1c5e20] rounded-lg group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center font-medium transition-all duration-300 ease-out active:scale-[0.98]"
+                            className="h-11 px-3 text-white/70 hover:bg-[#fbb03b] hover:text-white rounded-lg group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center font-medium transition-all duration-300 ease-out active:scale-[0.98]"
                         >
                             {isLoggingOut ? (
                                 <Loader size="sm" />
