@@ -73,7 +73,7 @@ export function AdminSidebar() {
         <Sidebar collapsible="icon" className="border-r-0">
             <SidebarHeader className="border-b border-sidebar-border">
                 <div className="flex items-center gap-3 px-3 py-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 shadow-lg shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out overflow-hidden">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#02aad7] shadow-lg shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out overflow-hidden">
                         <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-cover" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
@@ -107,14 +107,14 @@ export function AdminSidebar() {
                                                 "transition-all duration-300 ease-out",
                                                 "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10",
                                                 "group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
-                                                !isActive && "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground hover:translate-x-0.5 active:scale-[0.98]"
+                                                !isActive && "text-sidebar-foreground/70 hover:bg-[#fbb03b]/20 hover:text-[#1c5e20] hover:translate-x-0.5 active:scale-[0.98]"
                                             )}
                                         >
                                             <Link
                                                 to={url}
                                                 className={cn(
                                                     "flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out",
-                                                    isActive && "admin-sidebar-link-active"
+                                                    isActive && "bg-[#02aad7] text-white hover:bg-[#02aad7]/90"
                                                 )}
                                             >
                                                 <item.icon
@@ -143,7 +143,7 @@ export function AdminSidebar() {
                             onClick={handleLogout}
                             disabled={isLoggingOut}
                             tooltip="Logout"
-                            className="h-11 px-3 text-sidebar-foreground/70 hover:bg-red-50 hover:text-red-600 rounded-lg group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center font-medium transition-all duration-300 ease-out active:scale-[0.98]"
+                            className="h-11 px-3 text-sidebar-foreground/70 hover:bg-[#fbb03b]/20 hover:text-[#1c5e20] rounded-lg group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center font-medium transition-all duration-300 ease-out active:scale-[0.98]"
                         >
                             {isLoggingOut ? (
                                 <Loader size="sm" />

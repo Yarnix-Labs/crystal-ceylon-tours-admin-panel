@@ -62,7 +62,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("ray_refresh_token");
         setIsAuthenticated(false);
         toast.info("Logged out successfully");
-        navigate("/admin/login");
+        navigate("/");
     };
 
     const forgotPassword = async (email: string) => {
