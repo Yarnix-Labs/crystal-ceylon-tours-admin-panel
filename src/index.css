@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 14% 96%;
+    --foreground: 220 20% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 20%;
+
+    --primary: 184 66% 44%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 20% 96%;
+    --secondary-foreground: 220 20% 20%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 10% 50%;
+
+    --accent: 184 66% 44%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 184 66% 44%;
+
+    --radius: 0.75rem;
+
+    /* Custom RAV Lanka Travels Colors */
+    --coral: 184 66% 44%;
+    --coral-light: 184 66% 52%;
+    --coral-dark: 184 66% 36%;
+    --navy: 215 35% 18%;
+    --navy-light: 215 30% 25%;
+    --gold: 45 90% 55%;
+    --cream: 40 30% 97%;
+
+    /* Admin Sidebar - Soft dark grey in light mode */
+    --sidebar-background: 220 16% 22%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 184 66% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 16% 28%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 16% 28%;
+    --sidebar-ring: 184 66% 44%;
+  }
+
+  .dark {
+    --background: 215 35% 12%;
+    --foreground: 210 40% 98%;
+
+    --card: 215 35% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 215 35% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 184 66% 44%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 30% 20%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 215 30% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 184 66% 44%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 30% 25%;
+    --input: 215 30% 25%;
+    --ring: 184 66% 44%;
+
+    --sidebar-background: 220 20% 12%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 184 66% 44%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 18%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 20% 18%;
+    --sidebar-ring: 184 66% 44%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .section-script {
+    @apply font-script text-2xl md:text-3xl text-primary;
+  }
+
+  .section-title {
+    @apply font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground;
+  }
+
+  .hero-title-script {
+    @apply font-script text-5xl md:text-7xl lg:text-8xl text-primary;
+  }
+}
+
+@layer utilities {
+  .text-gradient-coral {
+    @apply bg-gradient-to-r from-primary to-coral-light bg-clip-text text-transparent;
+  }
+}
+
+/* Admin sidebar: active item (class on Link so it works in all envs including Vercel) */
+.admin-sidebar-link-active {
+  background: linear-gradient(to right, rgb(59 130 246), rgb(37 99 235)) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 6px -1px rgb(59 130 246 / 0.3);
+}
+.admin-sidebar-link-active:hover {
+  background: linear-gradient(to right, rgb(37 99 235), rgb(29 78 216)) !important;
+  color: white !important;
+}
