@@ -71,14 +71,21 @@ export function AdminSidebar() {
 
     return (
         <Sidebar collapsible="icon" className="border-r-0">
-            <SidebarHeader className="border-b border-sidebar-border">
-                <div className="flex items-center gap-3 px-3 py-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#02aad7] shadow-lg shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out overflow-hidden">
-                        <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-cover" />
+            <SidebarHeader className="border-b border-white/5">
+                <div className="flex items-center gap-3 px-3 py-5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 border border-white/10 shadow-sm shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out p-1">
+                        <div className="w-full h-full bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                            <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-cover" />
+                        </div>
                     </div>
-                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                        <span className="truncate font-bold text-sidebar-foreground tracking-tight">Crystal Ceylon Tours</span>
-                        <span className="truncate text-xs text-sidebar-foreground/60 font-medium">Admin Panel</span>
+                    <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+                        <span className="truncate font-bold tracking-wide text-[13px] flex items-center gap-0.5">
+                            <span className="text-[#02aad7]">Crystal</span>
+                            <span className="text-[#fbb03b]">Ceylon Tours</span>
+                        </span>
+                        <span className="truncate text-[9px] text-white/50 font-semibold uppercase tracking-widest mt-0.5">
+                            Admin Panel
+                        </span>
                     </div>
                 </div>
             </SidebarHeader>
@@ -109,9 +116,10 @@ export function AdminSidebar() {
                                                 !isActive && "text-white/70 hover:bg-[#fbb03b] hover:text-white hover:translate-x-0.5 active:scale-[0.98]"
                                             )}
                                             style={isActive ? {
-                                                backgroundColor: '#fbb03b',
-                                                color: 'white !important',
-                                                fontWeight: '500'
+                                                background: 'linear-gradient(to right, rgb(251, 176, 59), rgb(230, 150, 40))',
+                                                color: 'white',
+                                                fontWeight: '600',
+                                                boxShadow: '0 4px 6px -1px rgba(251, 176, 59, 0.3)'
                                             } : {}}
                                         >
                                             <Link
