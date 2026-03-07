@@ -84,7 +84,7 @@ export function TopBar({ pageTitle }: TopBarProps) {
                             </Button>
                             {unreadCount > 0 && (
                                 <Badge 
-                                    className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center p-0 px-1 bg-gradient-to-r from-[#02aad7] to-[#fbb03b] border-2 border-background text-[10px] font-bold shadow-lg pointer-events-none"
+                                    className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center p-0 px-1 bg-[#fbb03b] border-2 border-background text-[10px] font-bold shadow-lg pointer-events-none"
                                 >
                                     {unreadCount}
                                 </Badge>
@@ -191,7 +191,7 @@ export function TopBar({ pageTitle }: TopBarProps) {
                         >
                             <Avatar className="h-8 w-8 ring-2 ring-primary/20 group-hover:ring-[#02aad7]/40 transition-all duration-200">
                                 <AvatarImage src={avatarUrl} alt={userName} />
-                                <AvatarFallback className="bg-gradient-to-br from-[#02aad7] to-[#fbb03b] text-white text-sm font-bold shadow-inner">
+                                <AvatarFallback className="bg-[#fbb03b] text-white text-sm font-bold shadow-inner">
                                     {userName.split(' ').map(n => n[0]).join('').toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
@@ -210,7 +210,7 @@ export function TopBar({ pageTitle }: TopBarProps) {
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-12 w-12 ring-2 ring-[#02aad7]/30">
                                     <AvatarImage src={avatarUrl} alt={userName} />
-                                    <AvatarFallback className="bg-gradient-to-br from-[#02aad7] to-[#fbb03b] text-white text-base font-bold">
+                                    <AvatarFallback className="bg-[#fbb03b] text-white text-base font-bold">
                                         {userName.split(' ').map(n => n[0]).join('').toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
