@@ -131,18 +131,18 @@
 
 @layer utilities {
   .text-gradient-coral {
-    @apply bg-gradient-to-r from-primary to-coral-light bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-[#02aad7] bg-clip-text text-transparent;
   }
 }
 
 /* Admin sidebar: active item (class on Link so it works in all envs including Vercel) */
 .admin-sidebar-link-active {
-  background: linear-gradient(to right, rgb(251 176 59), rgb(230 150 40)) !important;
+  background: linear-gradient(to right, #02aad7, #fbb03b) !important;
   color: white !important;
   font-weight: 600 !important;
-  box-shadow: 0 4px 6px -1px rgb(251 176 59 / 0.3);
+  box-shadow: 0 4px 10px -2px rgba(2, 170, 215, 0.4);
 }
 .admin-sidebar-link-active:hover {
-  background: linear-gradient(to right, rgb(230 150 40), rgb(210 130 20)) !important;
+  background: linear-gradient(to right, #029bc4, #eaa02a) !important;
   color: white !important;
 }

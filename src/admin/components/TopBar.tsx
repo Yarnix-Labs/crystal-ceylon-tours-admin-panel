@@ -84,7 +84,7 @@ export function TopBar({ pageTitle }: TopBarProps) {
                             </Button>
                             {unreadCount > 0 && (
                                 <Badge 
-                                    className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center p-0 px-1 bg-gradient-to-r from-blue-500 to-blue-600 border-2 border-background text-[10px] font-bold shadow-lg pointer-events-none"
+                                    className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center p-0 px-1 bg-gradient-to-r from-[#02aad7] to-[#fbb03b] border-2 border-background text-[10px] font-bold shadow-lg pointer-events-none"
                                 >
                                     {unreadCount}
                                 </Badge>
@@ -110,12 +110,12 @@ export function TopBar({ pageTitle }: TopBarProps) {
                                         onSelect={() => navigate("/admin/notifications")}
                                     >
                                         <div className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                                            notification.type === 'booking' ? 'bg-blue-500/10 group-hover:bg-blue-500/20' :
+                                            notification.type === 'booking' ? 'bg-primary/10 group-hover:bg-primary/20' :
                                             notification.type === 'review' ? 'bg-green-500/10 group-hover:bg-green-500/20' :
                                             notification.type === 'alert' ? 'bg-amber-500/10 group-hover:bg-amber-500/20' :
                                             'bg-gray-500/10 group-hover:bg-gray-500/20'
                                         }`}>
-                                            {notification.type === 'booking' ? <Bell className="h-4 w-4 text-blue-600 group-hover:text-blue-700" /> :
+                                            {notification.type === 'booking' ? <Bell className="h-4 w-4 text-primary group-hover:text-primary/80" /> :
                                              notification.type === 'review' ? <MessageSquare className="h-4 w-4 text-green-600 group-hover:text-green-700" /> :
                                              notification.type === 'alert' ? <Bell className="h-4 w-4 text-amber-600 group-hover:text-amber-700" /> :
                                              <Settings className="h-4 w-4 text-gray-600 group-hover:text-gray-700" />}
@@ -128,7 +128,7 @@ export function TopBar({ pageTitle }: TopBarProps) {
                                             <p className="text-[10px] text-muted-foreground group-hover:text-primary-foreground/70 font-medium pt-1">{notification.createdAt}</p>
                                         </div>
                                         {!notification.isRead && (
-                                            <div className="h-2 w-2 bg-blue-500 rounded-full shrink-0 group-hover:bg-blue-400" />
+                                            <div className="h-2 w-2 bg-primary rounded-full shrink-0 group-hover:bg-primary/80" />
                                         )}
                                     </DropdownMenuItem>
                                 ))
@@ -189,9 +189,9 @@ export function TopBar({ pageTitle }: TopBarProps) {
                             variant="ghost"
                             className="relative h-10 gap-3 pl-2 pr-3 rounded-xl hover:bg-accent transition-all duration-200 hover:shadow-md group"
                         >
-                            <Avatar className="h-8 w-8 ring-2 ring-blue-500/20 group-hover:ring-blue-500/40 transition-all duration-200">
+                            <Avatar className="h-8 w-8 ring-2 ring-primary/20 group-hover:ring-[#02aad7]/40 transition-all duration-200">
                                 <AvatarImage src={avatarUrl} alt={userName} />
-                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-sm font-bold shadow-inner">
+                                <AvatarFallback className="bg-gradient-to-br from-[#02aad7] to-[#fbb03b] text-white text-sm font-bold shadow-inner">
                                     {userName.split(' ').map(n => n[0]).join('').toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
@@ -208,9 +208,9 @@ export function TopBar({ pageTitle }: TopBarProps) {
                     >
                         <DropdownMenuLabel className="font-normal px-3 py-2">
                             <div className="flex items-center gap-3">
-                                <Avatar className="h-12 w-12 ring-2 ring-blue-500/30">
+                                <Avatar className="h-12 w-12 ring-2 ring-[#02aad7]/30">
                                     <AvatarImage src={avatarUrl} alt={userName} />
-                                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-base font-bold">
+                                    <AvatarFallback className="bg-gradient-to-br from-[#02aad7] to-[#fbb03b] text-white text-base font-bold">
                                         {userName.split(' ').map(n => n[0]).join('').toUpperCase()}
                                     </AvatarFallback>
                                 </Avatar>
@@ -224,24 +224,24 @@ export function TopBar({ pageTitle }: TopBarProps) {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator className="my-2" />
                         <DropdownMenuItem 
-                            className="rounded-lg py-2.5 px-3 cursor-pointer transition-colors"
+                            className="rounded-lg py-2.5 px-3 cursor-pointer transition-colors focus:bg-[#fbb03b] focus:text-white group"
                             onClick={() => navigate("/admin/profile")}
                         >
-                            <User className="mr-3 h-4 w-4 text-blue-500" />
+                            <User className="mr-3 h-4 w-4 text-[#fbb03b] group-focus:text-white" />
                             <span className="font-medium">My Profile</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
-                            className="rounded-lg py-2.5 px-3 cursor-pointer transition-colors"
+                            className="rounded-lg py-2.5 px-3 cursor-pointer transition-colors focus:bg-[#fbb03b] focus:text-white group"
                             onClick={() => navigate("/admin/settings")}
                         >
-                            <Settings className="mr-3 h-4 w-4 text-blue-500" />
+                            <Settings className="mr-3 h-4 w-4 text-[#fbb03b] group-focus:text-white" />
                             <span className="font-medium">Settings</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
-                            className="rounded-lg py-2.5 px-3 cursor-pointer transition-colors"
+                            className="rounded-lg py-2.5 px-3 cursor-pointer transition-colors focus:bg-[#fbb03b] focus:text-white group"
                             onClick={() => navigate("/admin/support")}
                         >
-                            <LifeBuoy className="mr-3 h-4 w-4 text-blue-500" />
+                            <LifeBuoy className="mr-3 h-4 w-4 text-[#fbb03b] group-focus:text-white" />
                             <span className="font-medium">Support / Help</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="my-2" />
