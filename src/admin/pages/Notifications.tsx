@@ -17,10 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 export default function Notifications() {
     const { toast } = useToast();
     const { 
-        notifications: contextNotifications, 
-        stats: contextStats, 
         loading: contextLoading,
-        fetchNotifications: fetchContextNotifications,
         markAllRead: contextMarkAllRead,
         markRead: contextMarkRead,
         favorite,
@@ -41,16 +38,9 @@ export default function Notifications() {
     const [hasPreviousPage, setHasPreviousPage] = useState(false);
     const [activeTab, setActiveTab] = useState<"all" | "unread" | "read" | "favorites">("all");
 
-    // Sync with context on mount
-    useEffect(() => {
-        fetchContextNotifications();
-    }, [fetchContextNotifications]);
 
-    // Update local state when context changes
-    useEffect(() => {
-        setNotifications(contextNotifications);
-        setStats(contextStats);
-    }, [contextNotifications, contextStats]);
+
+
 
     const [fetching, setFetching] = useState(false);
 

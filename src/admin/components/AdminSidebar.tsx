@@ -24,6 +24,7 @@ import {
     MessageSquare,
     CalendarRange,
     Mail,
+    MapPinned,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -39,6 +40,7 @@ const getAdminPath = (path: string) => (path === "/" ? "/admin" : `/admin${path}
 const menuItems = [
     { title: "Dashboard", path: "/", icon: LayoutDashboard },
     { title: "Booking Inquiries", path: "/bookings", icon: CalendarRange },
+    { title: "Custom Bookings", path: "/custom-bookings", icon: MapPinned },
     { title: "Contact Messages", path: "/messages", icon: MessageSquare },
     { title: "Tour Packages", path: "/tours", icon: Briefcase },
     { title: "Destinations", path: "/destinations", icon: Map },
