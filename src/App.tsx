@@ -53,6 +53,9 @@ const ContactMessages = lazy(
 const BookingInquiries = lazy(
   () => import("./admin/pages/BookingInquiries/BookingInquiries")
 );
+const CustomBookingInquiries = lazy(
+  () => import("./admin/pages/CustomBookingInquiries/CustomBookingInquiries")
+);
 const EmailList = lazy(() => import("./admin/pages/EmailList")); // New page
 const SupportDesk = lazy(() => import("./admin/pages/SupportDesk")); // Route not in use
 
@@ -126,6 +129,7 @@ const App = () => {
                   {/* Communication */}
                   <Route path="messages" element={<ContactMessages />} />
                   <Route path="bookings" element={<BookingInquiries />} />
+                  <Route path="custom-bookings" element={<CustomBookingInquiries />} />
                   <Route path="email-list" element={<EmailList />} />
                   <Route path="support" element={<SupportDesk />} />
                   
