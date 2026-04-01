@@ -82,14 +82,19 @@ export default function CustomBookingInquiries() {
 
     const [isFetchingInquiry, setIsFetchingInquiry] = useState(false);
 
-    const loadInquiries = async (page: number, showLoading: boolean = true) => {
+    const loadInquiries = async (page: number, currentFilter: string, showLoading: boolean = true) => {
         try {
             if (showLoading) {
                 setIsLoading(true);
             } else {
                 setIsFetchingInquiry(true);
             }
-            const response = await customBookingService.getAll(page);
+            let response;
+            if (currentFilter === "all") {
+                response = await customBookingService.getAll(page);
+            } else {
+                response = await customBookingService.filterByStatus(currentFilter as InquiryStatus, page);
+            }
             setInquiries(response.data.items);
             setMeta(response.data.meta);
         } catch (error) {
@@ -102,25 +107,29 @@ export default function CustomBookingInquiries() {
     };
 
     useEffect(() => {
-        loadInquiries(currentPage, true);
-    }, []);
+        loadInquiries(currentPage, filter, true);
+    }, [filter]);
 
     useEffect(() => {
         if (currentPage > 1 || inquiries.length > 0) {
-            loadInquiries(currentPage, false);
+            loadInquiries(currentPage, filter, false);
         }
     }, [currentPage]);
 
     // Filter Logic
     const filteredInquiries = inquiries.filter(inq => {
-        const matchesFilter = filter === "all" || inq.status === filter;
         const searchLower = searchQuery.toLowerCase();
         const matchesSearch = 
             inq.fullName.toLowerCase().includes(searchLower) ||
             inq.email.toLowerCase().includes(searchLower) ||
             inq.phoneNumber.includes(searchQuery);
-        return matchesFilter && matchesSearch;
+        return matchesSearch;
     });
+
+    const handleFilterChange = (value: string) => {
+        setFilter(value);
+        setCurrentPage(1);
+    };
 
     const handleViewInquiry = async (inq: Inquiry) => {
         // Open sheet immediately with available data
@@ -157,7 +166,7 @@ export default function CustomBookingInquiries() {
             await customBookingService.delete(inquiryToDelete);
             toast.success("Inquiry deleted successfully");
             if (selectedInquiry?.id === inquiryToDelete) setIsSheetOpen(false);
-            await loadInquiries(currentPage);
+            await loadInquiries(currentPage, filter);
         } catch (error) {
             console.error(error);
             toast.error("Failed to delete inquiry");
@@ -183,7 +192,7 @@ export default function CustomBookingInquiries() {
             });
             
             toast.success(`Status updated to ${newStatus}`);
-            await loadInquiries(currentPage);
+            await loadInquiries(currentPage, filter);
         } catch (error) {
             console.error(error);
             toast.error("Failed to update status");
@@ -207,7 +216,7 @@ export default function CustomBookingInquiries() {
             });
 
             toast.success("Admin note saved");
-            await loadInquiries(currentPage);
+            await loadInquiries(currentPage, filter);
         } catch (error) {
             console.error(error);
             toast.error("Failed to save admin note");
@@ -258,7 +267,7 @@ export default function CustomBookingInquiries() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <Select value={filter} onValueChange={setFilter}>
+                    <Select value={filter} onValueChange={handleFilterChange}>
                         <SelectTrigger className="w-[140px]">
                             <div className="flex items-center gap-2">
                                 <Archive className="w-3 h-3 text-muted-foreground" />
@@ -277,7 +286,7 @@ export default function CustomBookingInquiries() {
                         variant="outline" 
                         size="icon"
                         onClick={async () => {
-                            await loadInquiries(currentPage, false);
+                            await loadInquiries(currentPage, filter, false);
                             toast.success("Refreshed");
                         }}
                         disabled={isLoading || isFetchingInquiry}

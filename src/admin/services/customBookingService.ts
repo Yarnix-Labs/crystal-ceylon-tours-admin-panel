@@ -164,7 +164,7 @@ export const customBookingService = {
     id: string | number,
     payload: UpdateCustomStatusPayload,
   ): Promise<CustomBookingActionResponse> {
-    const { data } = await axiosInstance.post(
+    const { data } = await axiosInstance.put(
       ENDPOINTS.customBookingsUpdateStatus(id),
       payload,
     );
