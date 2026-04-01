@@ -493,7 +493,7 @@ export default function CustomBookingInquiries() {
 
             {/* Detail Drawer */}
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                <SheetContent className="sm:max-w-xl overflow-y-auto w-full">
+                <SheetContent className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-4xl overflow-y-auto">
                     {isFetchingInquiry ? (
                         <div className="flex flex-col items-center justify-center h-full py-12">
                             <Loader size="lg" />
@@ -535,7 +535,7 @@ export default function CustomBookingInquiries() {
                             </div>
 
                             {/* Info Grid */}
-                            <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm bg-muted/20 p-4 rounded-xl border border-border/50">
                                 <div className="flex items-center gap-2 min-w-0 overflow-hidden">
                                     <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
                                     <a href={`mailto:${selectedInquiry.email}`} className="hover:underline break-all min-w-0">
@@ -556,7 +556,7 @@ export default function CustomBookingInquiries() {
                             <Separator />
 
                             {/* Destinations and Activities */}
-                            <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted/10 p-4 rounded-xl border border-border/50">
                                 <div className="space-y-2">
                                     <h4 className="flex items-center gap-2 text-sm font-semibold">
                                         <Compass className="h-4 w-4 text-primary" />
