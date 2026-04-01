@@ -57,9 +57,7 @@ export function TopBar({ pageTitle }: TopBarProps) {
         fetchUser();
     }, [fetchUser]);
 
-    useEffect(() => {
-        fetchNotifications();
-    }, [fetchNotifications]);
+
 
     return (
         <div className="flex items-center justify-between w-full px-1">
