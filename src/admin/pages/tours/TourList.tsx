@@ -471,7 +471,7 @@ export default function TourList() {
                                 className="h-8 w-8 hover:bg-primary/10 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={() =>
                                   window.open(
-                                    `https://www.ravlankatravels.com/tour-packages/${item.slug}`,
+                                    `https://crystalceylontours.com/tour-packages/${item.slug}`,
                                     "_blank"
                                   )
                                 }
