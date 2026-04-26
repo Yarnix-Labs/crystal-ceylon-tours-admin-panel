@@ -57,6 +57,7 @@ const CustomBookingInquiries = lazy(
   () => import("./admin/pages/CustomBookingInquiries/CustomBookingInquiries")
 );
 const EmailList = lazy(() => import("./admin/pages/EmailList")); // New page
+const QuickBookings = lazy(() => import("./admin/pages/QuickBookings/QuickBookings"));
 const SupportDesk = lazy(() => import("./admin/pages/SupportDesk")); // Route not in use
 
 const queryClient = new QueryClient({
@@ -128,9 +129,10 @@ const App = () => {
                   
                   {/* Communication */}
                   <Route path="messages" element={<ContactMessages />} />
-                  <Route path="bookings" element={<BookingInquiries />} />
-                  <Route path="custom-bookings" element={<CustomBookingInquiries />} />
-                  <Route path="email-list" element={<EmailList />} />
+                   <Route path="bookings" element={<BookingInquiries />} />
+                   <Route path="custom-bookings" element={<CustomBookingInquiries />} />
+                   <Route path="quick-bookings" element={<QuickBookings />} />
+                   <Route path="email-list" element={<EmailList />} />
                   <Route path="support" element={<SupportDesk />} />
                   
                   {/* User Management */}

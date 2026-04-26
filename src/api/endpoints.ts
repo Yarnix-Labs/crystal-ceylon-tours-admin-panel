@@ -114,6 +114,14 @@ export const ENDPOINTS = {
   customBookingsUpdateStatus: (id: string | number) => `/custom-bookings/status/${id}`,
   customBookingsDelete: (id: string | number) => `/custom-bookings/${id}`,
 
+  // Quick Bookings
+  quickBookings: "/quick-bookings",
+  quickBookingsById: (id: string | number) => `/quick-bookings/${id}`,
+  quickBookingsFilter: "/quick-bookings/filter",
+  quickBookingsUpdateAdminNote: (id: string | number) => `/quick-bookings/admin-note/${id}`,
+  quickBookingsUpdateStatus: (id: string | number) => `/quick-bookings/status/${id}`,
+  quickBookingsDelete: (id: string | number) => `/quick-bookings/${id}`,
+
   // Contact Messages
   contactMessagesList: "/contact/message/list",
   contactMessageById: (id: string | number) => `/contact/message/${id}`,

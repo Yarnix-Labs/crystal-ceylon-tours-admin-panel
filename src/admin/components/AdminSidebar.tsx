@@ -25,6 +25,7 @@ import {
     CalendarRange,
     Mail,
     MapPinned,
+    Car,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -41,6 +42,7 @@ const menuItems = [
     { title: "Dashboard", path: "/", icon: LayoutDashboard },
     { title: "Booking Inquiries", path: "/bookings", icon: CalendarRange },
     { title: "Custom Bookings", path: "/custom-bookings", icon: MapPinned },
+    { title: "Quick Bookings", path: "/quick-bookings", icon: Car },
     { title: "Contact Messages", path: "/messages", icon: MessageSquare },
     { title: "Tour Packages", path: "/tours", icon: Briefcase },
     { title: "Destinations", path: "/destinations", icon: Map },
