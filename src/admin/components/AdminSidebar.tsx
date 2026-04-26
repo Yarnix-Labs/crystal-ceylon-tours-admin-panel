@@ -36,7 +36,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo.jpeg";
 
-const getAdminPath = (path: string) => (path === "/" ? "/admin" : `/admin${path}`);
+const getAdminPath = (path: string) => (path === "/" ? "/dashboard" : `/dashboard${path}`);
 
 const menuItems = [
     { title: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -75,7 +75,7 @@ export function AdminSidebar() {
     return (
         <Sidebar collapsible="icon" className="border-r-0">
             <SidebarHeader className="border-b border-white/5">
-                <div className="flex items-center gap-3 px-3 py-5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out">
+                <div className="flex items-center gap-3 px-3 py-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5 border border-white/10 shadow-sm shrink-0 group-data-[collapsible=icon]:h-11 group-data-[collapsible=icon]:w-11 transition-all duration-300 ease-out p-1">
                         <div className="w-full h-full bg-white rounded-lg flex items-center justify-center overflow-hidden">
                             <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-cover" />
@@ -92,7 +92,7 @@ export function AdminSidebar() {
                     </div>
                 </div>
             </SidebarHeader>
-            <SidebarContent className="py-4">
+            <SidebarContent className="py-3 [ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:display-none">
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu className="gap-1 px-2">
@@ -106,40 +106,45 @@ export function AdminSidebar() {
                                 return (
                                     <SidebarMenuItem
                                         key={item.title}
-                                        className="transition-all duration-300 ease-out"
+                                        className="transition-all duration-300 ease-out relative"
                                     >
                                         <SidebarMenuButton
                                             isActive={isActive}
                                             tooltip={item.title}
                                             className={cn(
-                                                "relative h-10 px-3 text-sm rounded-lg",
-                                                "transition-all duration-300 ease-out",
+                                                "relative h-10 px-3.5 text-sm rounded-lg overflow-hidden",
+                                                "transition-all duration-300 ease-in-out",
                                                 "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10",
                                                 "group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center",
-                                                !isActive && "text-white/70 hover:bg-[#fbb03b] hover:text-white hover:translate-x-0.5 active:scale-[0.98]"
+                                                isActive 
+                                                    ? "text-white shadow-md shadow-black/20" 
+                                                    : "text-white/60 hover:text-white hover:bg-white/10 active:scale-[0.98]"
                                             )}
                                             style={isActive ? {
-                                                background: 'linear-gradient(to right, rgb(251, 176, 59), rgb(230, 150, 40))',
-                                                color: 'white',
-                                                fontWeight: '600',
-                                                boxShadow: '0 4px 6px -1px rgba(251, 176, 59, 0.3)'
+                                                background: 'linear-gradient(135deg, #d98d1a 0%, #bf7c13 100%)',
                                             } : {}}
                                         >
                                             <Link
                                                 to={url}
-                                                className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-out"
+                                                className="flex items-center gap-3 w-full group-data-[collapsible=icon]:justify-center"
                                             >
                                                 <item.icon
                                                     className={cn(
-                                                        "h-[18px] w-[18px] shrink-0 transition-transform duration-300 ease-out",
-                                                        isActive ? "scale-110" : "group-hover:scale-105"
+                                                        "h-5 w-5 shrink-0 transition-all duration-300",
+                                                        isActive ? "scale-110 drop-shadow-md" : "group-hover:scale-110 opacity-70 group-hover:opacity-100"
                                                     )}
                                                 />
-                                                <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
-                                                {isActive && (
-                                                    <div className="absolute inset-0 rounded-lg bg-white/10 group-data-[collapsible=icon]:hidden pointer-events-none" />
-                                                )}
+                                                <span className={cn(
+                                                    "truncate group-data-[collapsible=icon]:hidden font-medium",
+                                                    isActive ? "tracking-wide" : "tracking-normal"
+                                                )}>
+                                                    {item.title}
+                                                </span>
                                             </Link>
+                                            {/* Left Indicator */}
+                                            {isActive && (
+                                                <div className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-white/80 rounded-r-full shadow-[1px_0_4px_rgba(0,0,0,0.2)]" />
+                                            )}
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 );
