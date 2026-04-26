@@ -51,7 +51,6 @@ const menuItems = [
     { title: "Image Gallery", path: "/media", icon: Image },
     { title: "Customer Reviews", path: "/reviews", icon: Star },
     { title: "Email List", path: "/email-list", icon: Mail },
-    { title: "Notifications", path: "/notifications", icon: Bell },
 ];
 
 export function AdminSidebar() {
