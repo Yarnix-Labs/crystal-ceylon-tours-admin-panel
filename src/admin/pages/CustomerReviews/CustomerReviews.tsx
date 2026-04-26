@@ -15,10 +15,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-    Edit, Trash2, RefreshCcw, Plus, Search,
-    Star, MessageSquare, Clock, CheckCircle2, XCircle, MoreHorizontal,
-    ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Eye,
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Eye,
+    Share2, Copy, Check, Facebook, Mail, Plus, Search, Star, MessageSquare, Clock, CheckCircle2, XCircle, MoreHorizontal, Edit, Trash2, RefreshCcw
 } from "lucide-react";
 import { Loader, ButtonLoader } from "@/admin/components/ui/Loader";
 import {
@@ -89,6 +87,38 @@ export default function CustomerReviews() {
     const navigate = useNavigate();
     const [deleteId, setDeleteId] = useState<string | null>(null);
     const [viewReview, setViewReview] = useState<AdminReview | null>(null);
+    const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const shareUrl = `https://review.crystalceylontours.com`;
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        toast.success("Link copied to clipboard!");
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const shareOptions = [
+        {
+            name: "WhatsApp",
+            icon: <MessageSquare className="w-5 h-5 text-green-500" />,
+            url: `https://wa.me/?text=${encodeURIComponent(`We'd love to hear your feedback! Please leave us a review here: ${shareUrl}`)}`,
+            color: "hover:bg-green-50 hover:text-green-700",
+        },
+        {
+            name: "Email",
+            icon: <Mail className="w-5 h-5 text-blue-500" />,
+            url: `mailto:?subject=${encodeURIComponent("Share your experience with Crystal Ceylon Tours")}&body=${encodeURIComponent(`Hello!\n\nWe hope you enjoyed your trip with us. We'd greatly appreciate it if you could share your experience by leaving a review at: ${shareUrl}\n\nThank you!`)}`,
+            color: "hover:bg-blue-50 hover:text-blue-700",
+        },
+        {
+            name: "Facebook",
+            icon: <Facebook className="w-5 h-5 text-[#1877F2]" />,
+            url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+            color: "hover:bg-blue-50 hover:text-[#1877F2]",
+        },
+    ];
 
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -212,13 +242,23 @@ export default function CustomerReviews() {
                             Manage feedback and testimonials from your travelers
                         </p>
                     </div>
-                    <Button 
-                        onClick={() => navigate("/admin/reviews/new")}
-                        className="gap-2 bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-200"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Add Review
-                    </Button>
+                    <div className="flex items-center gap-3">
+                        <Button 
+                            variant="outline"
+                            onClick={() => setIsShareDialogOpen(true)}
+                            className="gap-2 border-primary/20 text-primary hover:bg-primary/5 shadow-sm transition-all duration-200"
+                        >
+                            <Share2 className="w-4 h-4" />
+                            Share Link
+                        </Button>
+                        <Button 
+                            onClick={() => navigate("/admin/reviews/new")}
+                            className="gap-2 bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-200"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Review
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Stats Cards */}
@@ -734,8 +774,57 @@ export default function CustomerReviews() {
                                 </Button>
                             </div>
                         )}
-                        
                     </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+                <DialogContent className="sm:max-w-md rounded-3xl overflow-hidden border-none shadow-2xl">
+                    <DialogHeader className="space-y-3 pb-4">
+                        <DialogTitle className="text-2xl font-bold text-center">Share Review Link</DialogTitle>
+                        <DialogDescription className="text-center text-base">
+                            Send this link to your customers to collect their feedback.
+                        </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="space-y-6 py-4">
+                        {/* URL Display and Copy */}
+                        <div className="flex items-center gap-2 p-1.5 bg-muted/50 rounded-2xl border border-border">
+                            <div className="flex-1 px-3 text-sm font-medium text-muted-foreground truncate">
+                                {shareUrl}
+                            </div>
+                            <Button 
+                                size="sm" 
+                                className={cn(
+                                    "rounded-xl gap-2 transition-all duration-300",
+                                    copied ? "bg-green-500 hover:bg-green-600" : "bg-primary hover:bg-primary/90"
+                                )}
+                                onClick={handleCopyLink}
+                            >
+                                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                                {copied ? "Copied!" : "Copy Link"}
+                            </Button>
+                        </div>
+
+                        {/* Social Share Grid */}
+                        <div className="grid grid-cols-3 gap-4">
+                            {shareOptions.map((option) => (
+                                <a
+                                    key={option.name}
+                                    href={option.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={cn(
+                                        "flex flex-col items-center justify-center p-4 rounded-2xl border border-border bg-card transition-all duration-300 gap-2 shadow-sm hover:shadow-md",
+                                        option.color
+                                    )}
+                                >
+                                    {option.icon}
+                                    <span className="text-xs font-semibold">{option.name}</span>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

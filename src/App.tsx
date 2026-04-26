@@ -58,6 +58,7 @@ const CustomBookingInquiries = lazy(
 );
 const EmailList = lazy(() => import("./admin/pages/EmailList")); // New page
 const QuickBookings = lazy(() => import("./admin/pages/QuickBookings/QuickBookings"));
+const SubmitReview = lazy(() => import("./pages/SubmitReview"));
 const SupportDesk = lazy(() => import("./admin/pages/SupportDesk")); // Route not in use
 
 const queryClient = new QueryClient({
@@ -78,7 +79,30 @@ const AdminRedirect = () => {
   return <Navigate to={{ pathname, search: location.search, hash: location.hash }} replace />;
 };
 
+const isReviewSubdomain = 
+  window.location.hostname.startsWith("review.") || 
+  window.location.hostname === "review-crystalceylontours.local"; // Optional for local testing
+
 const App = () => {
+  if (isReviewSubdomain) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<SubmitReview />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -89,6 +113,8 @@ const App = () => {
           <AdminProviders>
             <Suspense fallback={<PageLoader />}>
               <Routes>
+                <Route path="/submit-review" element={<SubmitReview />} />
+                
                 {/* 🔐 ADMIN ROUTES */}
                 <Route path="/" element={<AdminLogin />} />
                 <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
