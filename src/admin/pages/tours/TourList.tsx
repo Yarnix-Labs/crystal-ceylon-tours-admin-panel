@@ -33,7 +33,7 @@ import {
   useDraftTours,
   useTourMutations,
 } from "@/hooks/useAdminData";
-import { AdminTourPackage } from "@/admin/services/tourService";
+import { AdminTourPackage, normalizeTour } from "@/admin/services/tourService";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -84,67 +84,17 @@ export default function TourList() {
 
   const tours =
     currentData?.items?.map((item) => {
-      // Normalize API response to AdminTourPackage format
-      const itinerary = (item.days ?? []).map((day: any, index: number) => ({
-        day: day.dayNumber ?? index + 1,
-        title: day.topic || day.subTopic || `Day ${index + 1}`,
-        location: day.location || "",
-        description: day.description || "",
-        accommodation: day.accommodation
-          ? day.hotelName || "Included"
-          : undefined,
-      }));
-
-      // Create a compatible object that matches both AdminTourPackage and UI expectations
-      const tour: AdminTourPackage = {
-        id: Number(item.id) || 0,
-        slug: item.slug || String(item.id),
-        name: item.name,
-        tourRefNumber: item.tourRefNumber || item.slug || String(item.id),
-        heroImage: item.heroImage,
-        shortDescription: item.shortDescription || "",
-        description: item.description || "",
-        price: item.price ?? 0,
-        packageType: item.packageType || "",
-        minPeople: item.minPeople ?? 1,
-        totalDays: item.totalDays ?? 0,
-        packageDuration: item.packageDuration || "",
-        status: viewMode === "published" ? "PUBLISHED" : "DRAFT",
-        days: (item.days ?? []).map((day: any, index: number) => ({
-          id: day.id ?? index,
-          dayNumber: day.dayNumber ?? index + 1,
-          location: day.location || "",
-          topic: day.topic || "",
-          subTopic: day.subTopic,
-          image: day.image,
-          description: day.description || "",
-          mealPlan: day.mealPlan,
-          accommodation: day.accommodation ?? false,
-          hotelName: day.hotelName,
-          hotelLocation: day.hotelLocation,
-          roomType: day.roomType,
-          destinations: day.destinations,
-          thingsToDo: day.thingsToDo,
-        })),
-        // Legacy fields for backward compatibility
-        packageDescription: item.description || item.shortDescription || "",
-        vision: {
-          title: "",
-          description: "",
-          image: "",
-        },
-        // Additional UI-specific fields (not part of TourPackage interface)
-        duration: item.duration ? String(item.duration) : "",
-        type: item.packageType || "",
-        refNo: item.slug || String(item.id),
-        category: item.packageType || "",
-        published: viewMode === "published",
-        includes: item.includes || [],
-        excludes: item.excludes || [],
-        itinerary,
-        extraDetails: item.extraDetails || "",
-        tags: item.tags || [],
-      } as AdminTourPackage;
+      // Use the centralized normalization function
+      const tour = normalizeTour(item);
+      
+      // Add UI-specific fields or overrides
+      tour.status = viewMode === "published" ? "PUBLISHED" : "DRAFT";
+      tour.published = viewMode === "published";
+      
+      // Legacy fields for backward compatibility if needed by specific components
+      tour.packageDescription = item.description || item.shortDescription || "";
+      (tour as any).duration = item.duration ? String(item.duration) : "";
+      (tour as any).refNo = item.slug || String(item.id);
 
       return tour;
     }) ?? [];

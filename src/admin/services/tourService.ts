@@ -3,19 +3,28 @@ import { ENDPOINTS } from "@/api/endpoints";
 import { BaseEntity } from "./api";
 
 // Tour Package type definition
+export interface UIItineraryDay {
+    day: number;
+    title: string;
+    location: string;
+    description: string;
+    accommodation?: string;
+}
+
 interface TourPackage {
     id: string | number;
     title: string;
+    name: string;
     slug: string;
     description?: string;
     duration: number;
     price: number;
     image?: string;
     gallery?: string[];
-    itinerary?: ApiTourDay[];
+    itinerary?: UIItineraryDay[];
     inclusions?: string[];
     exclusions?: string[];
-    status?: 'draft' | 'published' | 'archived';
+    status?: 'draft' | 'published' | 'archived' | 'PUBLISHED' | 'DRAFT';
     createdAt?: string;
     updatedAt?: string;
 }
@@ -47,10 +56,20 @@ export interface AdminTourPackage extends TourPackage, BaseEntity {
     tourRefNumber?: string;
     shortDescription?: string;
     description?: string;
+    packageDescription?: string;
     packageType?: string;
     extraDetails?: string;
     tags?: string[];
     days?: ApiTourDay[];
+    minPeople?: number;
+    heroImage?: string;
+    // UI specific aliases
+    type?: string;
+    refNo?: string;
+    category?: string;
+    published?: boolean;
+    includes?: string[];
+    excludes?: string[];
 }
 
 export interface CreateTourPackageDayPayload {
@@ -159,7 +178,7 @@ const generateTourRefNumber = (): string => {
     return `TOUR-${random}`;
 };
 
-const normalizeTour = (item: ApiTourPackage): AdminTourPackage => {
+export const normalizeTour = (item: ApiTourPackage): AdminTourPackage => {
     const itinerary = (item.days ?? []).map((day, index) => ({
         day: day.dayNumber ?? index + 1,
         title: day.topic || day.subTopic || `Day ${index + 1}`,
@@ -209,15 +228,21 @@ const normalizeTour = (item: ApiTourPackage): AdminTourPackage => {
     return {
         id: item.id,
         title: item.name,
+        name: item.name,
         slug: item.slug || String(item.id),
         description: item.description || item.shortDescription || "",
         duration: item.duration ?? 1,
-        price: item.price ?? 0,
-        image: item.heroImage,
+        price: typeof item.price === 'object' && item.price !== null 
+            ? (item.price as any).amount 
+            : (item.price ?? 0),
+        image: item.heroImage || (item as any).image || (item as any).coverImage,
+        heroImage: item.heroImage || (item as any).image || (item as any).coverImage,
         gallery: [],
-        itinerary: item.days || [],
+        itinerary: itinerary, // Use the computed itinerary
         inclusions: item.includes || [],
         exclusions: item.excludes || [],
+        includes: item.includes || [],
+        excludes: item.excludes || [],
         status: item.published ? "published" : "draft",
         createdAt: undefined,
         updatedAt: undefined,
@@ -229,7 +254,13 @@ const normalizeTour = (item: ApiTourPackage): AdminTourPackage => {
         packageType: item.packageType,
         extraDetails: item.extraDetails,
         tags: item.tags,
-        days: item.days,
+        days: normalizedDays,
+        minPeople: item.minPeople ?? 1,
+        // UI specific aliases
+        type: item.packageType || "",
+        refNo: item.tourRefNumber || item.slug || String(item.id),
+        category: item.packageType || "",
+        published: !!item.published,
     };
 };
 
