@@ -13,14 +13,15 @@ export interface VehicleInfo {
   id: number;
   name: string;
   type: string;
-  model: string;
-  passengers: number;
-  features: string[];
-  description: string;
-  images: string[];
-  status: string;
-  createdAt: string;
-  updatedAt: string;
+  model?: string;
+  passengers?: number;
+  features?: string[];
+  description?: string;
+  images?: string[];
+  image?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /**

@@ -381,6 +381,7 @@ export default function QuickBookings() {
                                 <TableHead className="w-[100px]">Status</TableHead>
                                 <TableHead>Date & Time</TableHead>
                                 <TableHead>Guest</TableHead>
+                                <TableHead>Service Type</TableHead>
                                 <TableHead>Route</TableHead>
                                 <TableHead>Vehicle</TableHead>
                                 <TableHead className="text-right">Action</TableHead>
@@ -389,13 +390,16 @@ export default function QuickBookings() {
                         <TableBody>
                             {isLoading ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="h-48 text-center">
-                                        <Loader size="lg" />
+                                    <TableCell colSpan={7} className="h-64">
+                                        <div className="flex flex-col items-center justify-center gap-3">
+                                            <Loader size="xl" />
+                                            <p className="text-sm text-muted-foreground animate-pulse">Loading bookings...</p>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ) : filteredBookings.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                                    <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                                         No quick bookings found.
                                     </TableCell>
                                 </TableRow>
@@ -430,6 +434,11 @@ export default function QuickBookings() {
                                             </div>
                                         </TableCell>
                                         <TableCell>
+                                            <Badge variant="secondary" className="whitespace-nowrap font-medium">
+                                                {booking.transferType}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
                                             <div className="flex flex-col text-sm max-w-[250px]">
                                                 <div className="flex items-center gap-1 text-primary font-medium truncate">
                                                     <MapPin className="w-3 h-3 shrink-0" /> {booking.pickupLocation}
@@ -437,14 +446,11 @@ export default function QuickBookings() {
                                                 <div className="flex items-center gap-1 text-muted-foreground truncate">
                                                     <MapPin className="w-3 h-3 shrink-0" /> {booking.dropLocation}
                                                 </div>
-                                                <div className="text-[10px] uppercase font-bold text-muted-foreground/60 mt-0.5">
-                                                    {booking.transferType}
-                                                </div>
                                             </div>
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-medium">{booking.vehicle.name}</span>
+                                                <span className="text-sm font-medium">{booking.vehicle.type}</span>
                                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                     <Users className="w-3 h-3" /> {booking.passengersCount} Passengers
                                                 </span>
@@ -602,7 +608,11 @@ export default function QuickBookings() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4 pt-2 border-t">
+                                    <div className="grid grid-cols-3 gap-4 pt-2 border-t">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] uppercase font-bold text-muted-foreground">Service Type</span>
+                                            <span className="text-sm font-medium">{selectedBooking.transferType}</span>
+                                        </div>
                                         <div className="flex flex-col">
                                             <span className="text-[10px] uppercase font-bold text-muted-foreground">Date</span>
                                             <span className="text-sm font-medium">{new Date(selectedBooking.date).toLocaleDateString()}</span>
@@ -622,17 +632,28 @@ export default function QuickBookings() {
                                 </h3>
                                 <Card className="border-primary/20 bg-primary/5">
                                     <CardContent className="p-4 flex items-center gap-4">
-                                        <div className="w-16 h-16 rounded-lg bg-background flex items-center justify-center shrink-0 border">
-                                            <Car className="h-8 w-8 text-muted-foreground" />
+                                        <div className="w-20 h-20 rounded-lg bg-background flex items-center justify-center shrink-0 border overflow-hidden">
+                                            {selectedBooking.vehicle.image ? (
+                                                <img 
+                                                    src={selectedBooking.vehicle.image} 
+                                                    alt={selectedBooking.vehicle.name} 
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <Car className="h-10 w-10 text-muted-foreground" />
+                                            )}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-bold text-lg">{selectedBooking.vehicle.name}</p>
-                                            <p className="text-sm text-muted-foreground">{selectedBooking.vehicle.type} • {selectedBooking.vehicle.model}</p>
+                                            <p className="font-bold text-lg">{selectedBooking.vehicle.type}</p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {selectedBooking.vehicle.name}
+                                                {selectedBooking.vehicle.model && ` • ${selectedBooking.vehicle.model}`}
+                                            </p>
                                             <div className="flex flex-wrap gap-2 mt-2">
                                                 <Badge variant="outline" className="bg-background">
                                                     <Users className="w-3 h-3 mr-1" /> {selectedBooking.passengersCount} PAX
                                                 </Badge>
-                                                {selectedBooking.vehicle.features.slice(0, 2).map((f, i) => (
+                                                {selectedBooking.vehicle.features && selectedBooking.vehicle.features.slice(0, 2).map((f, i) => (
                                                     <Badge key={i} variant="outline" className="bg-background">{f}</Badge>
                                                 ))}
                                             </div>
