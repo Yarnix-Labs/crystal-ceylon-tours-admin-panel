@@ -6,30 +6,27 @@ import { ENDPOINTS } from "@/api/endpoints";
  */
 export type CustomBookingStatus = "NEW" | "CONTACTED" | "CONFIRMED" | "CLOSED";
 
-export interface CustomBookingDestination {
-  id: number;
-  title: string;
-}
-
-export interface CustomBookingActivity {
-  id: number;
-  title: string;
-}
-
 /**
  * Custom Booking item interface
  */
 export interface CustomBookingItem {
   id: number;
-  destinations: CustomBookingDestination[];
-  startDate: string;
-  travelers: number;
-  activities: CustomBookingActivity[];
   fullName: string;
   email: string;
+  country: string;
+  startDate: string;
+  numberOfDays: number;
+  travelers: number;
+  vehicleId: number;
+  vehicle: {
+    id: number;
+    name: string;
+    type: string;
+    model: string;
+  };
   phoneNumber: string;
   whatsappNumber: string;
-  specialRequests: string;
+  specialRequests: string | null;
   status: CustomBookingStatus;
   adminNote: string | null;
   createdAt: string;

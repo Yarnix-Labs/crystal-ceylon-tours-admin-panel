@@ -367,8 +367,8 @@ export default function CustomBookingInquiries() {
                                 <TableHead className="w-[100px]">Status</TableHead>
                                 <TableHead>Start Date</TableHead>
                                 <TableHead>Guest Info</TableHead>
-                                <TableHead className="hidden md:table-cell">Travelers</TableHead>
-                                <TableHead className="hidden lg:table-cell">Destinations</TableHead>
+                                <TableHead className="hidden md:table-cell">Details</TableHead>
+                                <TableHead className="hidden lg:table-cell">Vehicle</TableHead>
                                 <TableHead className="hidden xl:table-cell">Submitted</TableHead>
                                 <TableHead className="text-right">Action</TableHead>
                             </TableRow>
@@ -412,12 +412,21 @@ export default function CustomBookingInquiries() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="hidden md:table-cell">
-                                            <Badge variant="outline" className="font-mono">{inq.travelers}</Badge>
+                                            <div className="flex flex-col gap-1">
+                                                <div className="flex items-center gap-1.5 text-xs">
+                                                    <Users className="w-3 h-3 text-muted-foreground" />
+                                                    <span>{inq.travelers} pax</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-xs">
+                                                    <CalendarRange className="w-3 h-3 text-muted-foreground" />
+                                                    <span>{inq.numberOfDays} days</span>
+                                                </div>
+                                            </div>
                                         </TableCell>
-                                        <TableCell className="hidden lg:table-cell max-w-[150px]">
-                                            <div className="flex items-center gap-2 text-sm truncate" title={inq.destinations?.map(d => d.title).join(", ")}>
-                                                <Compass className="w-3 h-3 shrink-0 text-muted-foreground" />
-                                                <span className="truncate">{inq.destinations?.map(d => d.title).join(", ")}</span>
+                                        <TableCell className="hidden lg:table-cell max-w-[200px]">
+                                            <div className="flex flex-col min-w-0">
+                                                <span className="font-medium truncate text-sm" title={inq.vehicle?.name}>{inq.vehicle?.name}</span>
+                                                <span className="text-xs text-muted-foreground truncate">{inq.vehicle?.type} • {inq.vehicle?.model}</span>
                                             </div>
                                         </TableCell>
                                         <TableCell className="hidden xl:table-cell text-muted-foreground text-sm">
@@ -501,161 +510,198 @@ export default function CustomBookingInquiries() {
                         </div>
                     ) : selectedInquiry && (
                         <div className="space-y-6 pb-8">
-                            <SheetTitle className="sr-only">Custom Booking Inquiry from {selectedInquiry.fullName}</SheetTitle>
-                            <SheetDescription className="sr-only">
-                                Custom booking inquiry details and management options
-                            </SheetDescription>
-                            {/* Header with Name and Status */}
-                            <div className="flex items-start justify-between gap-4">
-                                <div className="min-w-0 flex-1 overflow-hidden">
-                                    <h2 className="text-2xl font-bold break-words">{selectedInquiry.fullName}</h2>
-                                    <p className="text-sm text-muted-foreground mt-1 break-words">
-                                        {selectedInquiry.travelers} Travelers • Start Date: {new Date(selectedInquiry.startDate).toLocaleDateString()}
-                                    </p>
+                            {/* Header Section */}
+                            <div className="flex flex-col gap-4">
+                                <div className="flex items-start justify-between">
+                                    <div className="space-y-1">
+                                        <h2 className="text-3xl font-extrabold tracking-tight break-words text-foreground">
+                                            {selectedInquiry.fullName}
+                                        </h2>
+                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                            <Globe className="h-4 w-4" />
+                                            <span className="font-medium">{selectedInquiry.country}</span>
+                                            <span className="text-border">•</span>
+                                            <CalendarRange className="h-4 w-4" />
+                                            <span className="font-medium">{selectedInquiry.numberOfDays} Days Trip</span>
+                                        </div>
+                                    </div>
+                                    <Select 
+                                        value={selectedInquiry.status} 
+                                        onValueChange={(val: InquiryStatus) => handleStatusChange(val)}
+                                        disabled={isUpdatingStatus}
+                                    >
+                                        <SelectTrigger className={cn(
+                                            "w-[160px] h-10 font-semibold border-none shadow-sm transition-all",
+                                            selectedInquiry.status === 'NEW' && "bg-blue-100 text-blue-700 hover:bg-blue-200",
+                                            selectedInquiry.status === 'CONTACTED' && "bg-orange-100 text-orange-700 hover:bg-orange-200",
+                                            selectedInquiry.status === 'CONFIRMED' && "bg-green-100 text-green-700 hover:bg-green-200",
+                                            selectedInquiry.status === 'CLOSED' && "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                                        )}>
+                                            {isUpdatingStatus ? <Loader size="sm" /> : <SelectValue />}
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="NEW" className="text-blue-600 font-medium">New Inquiry</SelectItem>
+                                            <SelectItem value="CONTACTED" className="text-orange-600 font-medium">Contacted</SelectItem>
+                                            <SelectItem value="CONFIRMED" className="text-green-600 font-medium">Confirmed</SelectItem>
+                                            <SelectItem value="CLOSED" className="text-slate-600 font-medium">Closed / Archived</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                <Select 
-                                    value={selectedInquiry.status} 
-                                    onValueChange={(val: InquiryStatus) => handleStatusChange(val)}
-                                    disabled={isUpdatingStatus}
-                                >
-                                    <SelectTrigger className="w-[140px]">
-                                        {isUpdatingStatus ? (
-                                            <Loader size="sm" />
-                                        ) : (
-                                            <SelectValue />
-                                        )}
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="NEW">New</SelectItem>
-                                        <SelectItem value="CONTACTED">Contacted</SelectItem>
-                                        <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                                        <SelectItem value="CLOSED">Closed</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
 
-                            {/* Info Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm bg-muted/20 p-4 rounded-xl border border-border/50">
-                                <div className="flex items-center gap-2 min-w-0 overflow-hidden">
-                                    <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
-                                    <a href={`mailto:${selectedInquiry.email}`} className="hover:underline break-all min-w-0">
-                                        {selectedInquiry.email}
+                                {/* Contact Quick Actions */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <a 
+                                        href={`mailto:${selectedInquiry.email}`}
+                                        className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors group"
+                                    >
+                                        <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                                            <Mail className="h-4 w-4" />
+                                        </div>
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Email Address</span>
+                                            <span className="text-sm font-medium truncate">{selectedInquiry.email}</span>
+                                        </div>
+                                    </a>
+                                    <a 
+                                        href={`tel:${selectedInquiry.phoneNumber}`}
+                                        className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors group"
+                                    >
+                                        <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                                            <Phone className="h-4 w-4" />
+                                        </div>
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Phone Number</span>
+                                            <span className="text-sm font-medium truncate">{selectedInquiry.phoneNumber}</span>
+                                        </div>
                                     </a>
                                 </div>
-                                <div className="flex items-center gap-2 min-w-0 overflow-hidden">
-                                    <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                                    <a href={`tel:${selectedInquiry.phoneNumber}`} className="hover:underline break-all">
-                                        {selectedInquiry.phoneNumber}
-                                    </a>
-                                </div>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <span className="text-xs">ID: {selectedInquiry.id}</span>
-                                </div>
                             </div>
 
-                            <Separator />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                                {/* Trip Schedule Card */}
+                                <Card className="border-none bg-muted/20 shadow-none">
+                                    <CardContent className="p-5 space-y-4">
+                                        <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
+                                            <CalendarRange className="h-4 w-4" />
+                                            Trip Schedule
+                                        </div>
+                                        <div className="space-y-3">
+                                            <div className="flex flex-col">
+                                                <span className="text-xs text-muted-foreground">Start Date</span>
+                                                <span className="font-semibold text-lg">
+                                                    {new Date(selectedInquiry.startDate).toLocaleDateString(undefined, { 
+                                                        weekday: 'short', 
+                                                        month: 'long', 
+                                                        day: 'numeric', 
+                                                        year: 'numeric' 
+                                                    })}
+                                                </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs text-muted-foreground">Duration</span>
+                                                    <span className="font-bold text-xl text-primary">{selectedInquiry.numberOfDays} Days</span>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs text-muted-foreground">Group Size</span>
+                                                    <span className="font-bold text-xl">{selectedInquiry.travelers} People</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
 
-                            {/* Destinations and Activities */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted/10 p-4 rounded-xl border border-border/50">
-                                <div className="space-y-2">
-                                    <h4 className="flex items-center gap-2 text-sm font-semibold">
-                                        <Compass className="h-4 w-4 text-primary" />
-                                        Destinations
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {selectedInquiry.destinations?.length > 0 ? (
-                                            selectedInquiry.destinations.map(d => (
-                                                <Badge key={d.id} variant="secondary">{d.title}</Badge>
-                                            ))
-                                        ) : (
-                                            <span className="text-sm text-muted-foreground">None specified</span>
-                                        )}
+                                {/* Vehicle Preference Card */}
+                                <Card className="border-none bg-primary/5 shadow-none overflow-hidden relative">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                                        <Activity className="h-24 w-24" />
                                     </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <h4 className="flex items-center gap-2 text-sm font-semibold">
-                                        <Activity className="h-4 w-4 text-primary" />
-                                        Activities
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {selectedInquiry.activities?.length > 0 ? (
-                                            selectedInquiry.activities.map(a => (
-                                                <Badge key={a.id} variant="secondary">{a.title}</Badge>
-                                            ))
-                                        ) : (
-                                            <span className="text-sm text-muted-foreground">None specified</span>
-                                        )}
-                                    </div>
-                                </div>
+                                    <CardContent className="p-5 space-y-4 relative z-10">
+                                        <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
+                                            <Activity className="h-4 w-4" />
+                                            Vehicle Choice
+                                        </div>
+                                        <div className="space-y-2">
+                                            <div className="text-xl font-black text-foreground leading-tight">
+                                                {selectedInquiry.vehicle?.name}
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm border-primary/20">
+                                                    {selectedInquiry.vehicle?.type}
+                                                </Badge>
+                                                <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm border-primary/20">
+                                                    {selectedInquiry.vehicle?.model}
+                                                </Badge>
+                                            </div>
+                                            <div className="pt-2 text-[10px] text-muted-foreground font-mono">
+                                                VEHICLE_ID: {selectedInquiry.vehicleId}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             </div>
-
-                            <Separator />
 
                             {/* Special Requests */}
                             <div className="space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <MessageSquare className="h-4 w-4 text-primary" />
-                                    <h3 className="text-sm font-semibold">Special Requests</h3>
+                                <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest px-1">
+                                    <MessageSquare className="h-4 w-4" />
+                                    Special Requests & Requirements
                                 </div>
-                                <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm whitespace-pre-wrap break-words max-h-72 overflow-y-auto leading-relaxed">
-                                    {selectedInquiry.specialRequests || "No special requests provided."}
+                                <div className="bg-card border border-dashed border-border rounded-2xl p-6 text-sm whitespace-pre-wrap break-words italic text-foreground/80 leading-relaxed shadow-sm">
+                                    {selectedInquiry.specialRequests || "The customer did not provide any special requests for this booking."}
                                 </div>
                             </div>
 
-                            {/* Contact via WhatsApp Button */}
+                            {/* Main Contact Button */}
                             <Button
-                                className="w-full bg-green-600 hover:bg-green-700 text-white gap-2"
-                                size="lg"
+                                className="w-full h-14 bg-[#25D366] hover:bg-[#128C7E] text-white gap-3 rounded-2xl shadow-lg shadow-green-500/20 text-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 onClick={handleWhatsAppContact}
                             >
-                                <MessageSquare className="h-5 w-5" />
-                                Contact via WhatsApp
+                                <MessageSquare className="h-6 w-6 fill-current" />
+                                Chat with {selectedInquiry.fullName.split(' ')[0]}
                             </Button>
 
-                            <Separator />
+                            <Separator className="my-2" />
 
-                            {/* Admin Note Section */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <StickyNote className="h-4 w-4 text-muted-foreground" />
-                                    <h3 className="text-sm font-semibold">Admin Note</h3>
+                            {/* Admin Management Section */}
+                            <div className="space-y-4 bg-muted/30 p-6 rounded-2xl border border-border/50">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                                        <StickyNote className="h-4 w-4" />
+                                        Internal Admin Notes
+                                    </div>
+                                    <span className="text-[10px] text-muted-foreground font-medium">Last updated: {new Date(selectedInquiry.updatedAt).toLocaleString()}</span>
                                 </div>
                                 <Textarea 
-                                    placeholder="Add internal notes..." 
-                                    className="min-h-[150px] resize-none border-yellow-200 focus:border-yellow-300 bg-yellow-50/50"
+                                    placeholder="Add internal notes about your conversation with this customer..." 
+                                    className="min-h-[120px] resize-none border-none focus-visible:ring-1 focus-visible:ring-primary/20 bg-background/50 rounded-xl p-4 text-sm"
                                     value={noteText}
                                     onChange={(e) => setNoteText(e.target.value)}
                                 />
-                                <div className="flex justify-end">
+                                <div className="flex items-center justify-between">
                                     <Button
-                                        variant="outline"
+                                        variant="ghost"
                                         size="sm"
+                                        onClick={() => handleDeleteClick(selectedInquiry.id)}
+                                        disabled={isDeleting}
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-2 h-10 px-4 rounded-xl"
+                                    >
+                                        <ButtonLoader loading={isDeleting}>
+                                            <Trash2 className="h-4 w-4" /> Delete
+                                        </ButtonLoader>
+                                    </Button>
+
+                                    <Button
                                         onClick={handleSaveNote}
                                         disabled={isSavingNote}
-                                        className="gap-2"
+                                        className="gap-2 h-10 px-6 rounded-xl shadow-md"
                                     >
                                         <ButtonLoader loading={isSavingNote}>
-                                            <StickyNote className="h-4 w-4" /> Save Note
+                                            <Check className="h-4 w-4" /> Save Note
                                         </ButtonLoader>
                                     </Button>
                                 </div>
                             </div>
-
-                            <Separator className="my-8" />
-
-                            {/* Delete Button */}
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDeleteClick(selectedInquiry.id)}
-                                disabled={isDeleting}
-                                className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-2"
-                            >
-                                <ButtonLoader loading={isDeleting}>
-                                    <Trash2 className="h-4 w-4" /> Delete Inquiry
-                                </ButtonLoader>
-                            </Button>
                         </div>
                     )}
                 </SheetContent>
