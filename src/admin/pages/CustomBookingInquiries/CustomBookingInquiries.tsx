@@ -584,7 +584,7 @@ export default function CustomBookingInquiries() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-4">
                                 {/* Trip Schedule Card */}
                                 <Card className="border-none bg-muted/20 shadow-none">
                                     <CardContent className="p-5 space-y-4">
@@ -594,10 +594,9 @@ export default function CustomBookingInquiries() {
                                         </div>
                                         <div className="space-y-3">
                                             <div className="flex flex-col">
-                                                <span className="text-xs text-muted-foreground">Start Date</span>
-                                                <span className="font-semibold text-lg">
+                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Start Date</span>
+                                                <span className="font-semibold text-base">
                                                     {new Date(selectedInquiry.startDate).toLocaleDateString(undefined, { 
-                                                        weekday: 'short', 
                                                         month: 'long', 
                                                         day: 'numeric', 
                                                         year: 'numeric' 
@@ -606,12 +605,12 @@ export default function CustomBookingInquiries() {
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="flex flex-col">
-                                                    <span className="text-xs text-muted-foreground">Duration</span>
-                                                    <span className="font-bold text-xl text-primary">{selectedInquiry.numberOfDays} Days</span>
+                                                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Duration</span>
+                                                    <span className="font-bold text-lg text-primary">{selectedInquiry.numberOfDays} Days</span>
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <span className="text-xs text-muted-foreground">Group Size</span>
-                                                    <span className="font-bold text-xl">{selectedInquiry.travelers} People</span>
+                                                    <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Group Size</span>
+                                                    <span className="font-bold text-lg">{selectedInquiry.travelers} People</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -645,8 +644,7 @@ export default function CustomBookingInquiries() {
                                             <div className="text-sm font-bold text-foreground">
                                                 {selectedInquiry.vehicle?.name}
                                             </div>
-                                            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                                                <span>Model: {selectedInquiry.vehicle?.model}</span>
+                                            <div className="flex items-center justify-end text-[11px] text-muted-foreground">
                                                 <span className="font-mono opacity-50">#{selectedInquiry.vehicleId}</span>
                                             </div>
                                         </div>
@@ -664,6 +662,8 @@ export default function CustomBookingInquiries() {
                                     {selectedInquiry.specialRequests || "The customer did not provide any special requests for this booking."}
                                 </div>
                             </div>
+
+
 
                             {/* Main Contact Button */}
                             <Button
