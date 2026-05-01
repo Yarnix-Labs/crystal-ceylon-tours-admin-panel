@@ -424,9 +424,16 @@ export default function CustomBookingInquiries() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="hidden lg:table-cell max-w-[200px]">
-                                            <div className="flex flex-col min-w-0">
-                                                <span className="font-medium truncate text-sm" title={inq.vehicle?.name}>{inq.vehicle?.name}</span>
-                                                <span className="text-xs text-muted-foreground truncate">{inq.vehicle?.type} • {inq.vehicle?.model}</span>
+                                            <div className="flex items-center gap-3">
+                                                {inq.vehicle?.image && (
+                                                    <div className="h-10 w-16 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted/50">
+                                                        <img src={inq.vehicle.image} alt={inq.vehicle.name} className="h-full w-full object-cover" />
+                                                    </div>
+                                                )}
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className="font-bold text-sm text-primary truncate" title={inq.vehicle?.type}>{inq.vehicle?.type}</span>
+                                                    <span className="text-xs text-muted-foreground truncate">{inq.vehicle?.name} • {inq.vehicle?.model}</span>
+                                                </div>
                                             </div>
                                         </TableCell>
                                         <TableCell className="hidden xl:table-cell text-muted-foreground text-sm">
@@ -512,7 +519,7 @@ export default function CustomBookingInquiries() {
                         <div className="space-y-6 pb-8">
                             {/* Header Section */}
                             <div className="flex flex-col gap-4">
-                                <div className="flex items-start justify-between">
+                                <div className="flex items-start justify-between pr-10">
                                     <div className="space-y-1">
                                         <h2 className="text-3xl font-extrabold tracking-tight break-words text-foreground">
                                             {selectedInquiry.fullName}
@@ -612,29 +619,35 @@ export default function CustomBookingInquiries() {
                                 </Card>
 
                                 {/* Vehicle Preference Card */}
-                                <Card className="border-none bg-primary/5 shadow-none overflow-hidden relative">
-                                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                                        <Activity className="h-24 w-24" />
-                                    </div>
-                                    <CardContent className="p-5 space-y-4 relative z-10">
-                                        <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
-                                            <Activity className="h-4 w-4" />
-                                            Vehicle Choice
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="text-xl font-black text-foreground leading-tight">
-                                                {selectedInquiry.vehicle?.name}
+                                <Card className="border-none bg-primary/5 shadow-none overflow-hidden group">
+                                    <CardContent className="p-0 space-y-0">
+                                        {selectedInquiry.vehicle?.image ? (
+                                            <div className="relative h-32 w-full bg-muted overflow-hidden">
+                                                <img 
+                                                    src={selectedInquiry.vehicle.image} 
+                                                    alt={selectedInquiry.vehicle.name} 
+                                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                                />
+                                                <div className="absolute top-2 left-2">
+                                                    <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">
+                                                        {selectedInquiry.vehicle?.type}
+                                                    </Badge>
+                                                </div>
                                             </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm border-primary/20">
+                                        ) : (
+                                            <div className="p-4 bg-primary/5 border-b border-border/50">
+                                                <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">
                                                     {selectedInquiry.vehicle?.type}
                                                 </Badge>
-                                                <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm border-primary/20">
-                                                    {selectedInquiry.vehicle?.model}
-                                                </Badge>
                                             </div>
-                                            <div className="pt-2 text-[10px] text-muted-foreground font-mono">
-                                                VEHICLE_ID: {selectedInquiry.vehicleId}
+                                        )}
+                                        <div className="p-4 space-y-1">
+                                            <div className="text-sm font-bold text-foreground">
+                                                {selectedInquiry.vehicle?.name}
+                                            </div>
+                                            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                                                <span>Model: {selectedInquiry.vehicle?.model}</span>
+                                                <span className="font-mono opacity-50">#{selectedInquiry.vehicleId}</span>
                                             </div>
                                         </div>
                                     </CardContent>

@@ -23,6 +23,7 @@ export interface CustomBookingItem {
     name: string;
     type: string;
     model: string;
+    image: string | null;
   };
   phoneNumber: string;
   whatsappNumber: string;

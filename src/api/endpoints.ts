@@ -110,7 +110,7 @@ export const ENDPOINTS = {
   customBookings: "/custom-bookings",
   customBookingsById: (id: string | number) => `/custom-bookings/${id}`,
   customBookingsFilter: "/custom-bookings/filter",
-  customBookingsUpdateAdminNote: (id: string | number) =>`/custom-bookings/admin-note/${id}`,
+  customBookingsUpdateAdminNote: (id: string | number) =>`/custom-bookings/admin/notes/${id}`,
   customBookingsUpdateStatus: (id: string | number) => `/custom-bookings/status/${id}`,
   customBookingsDelete: (id: string | number) => `/custom-bookings/${id}`,
 
