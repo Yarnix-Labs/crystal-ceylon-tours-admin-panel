@@ -11,31 +11,31 @@ export type BookingStatus = "NEW" | "CONTACTED" | "CONFIRMED" | "CLOSED";
  */
 export interface BookingItem {
   id: number;
-
   tourPackageId: number | null;
-
+  tourPackage: {
+    id: number;
+    name: string;
+    slug: string;
+  } | null;
+  vehicleId: number | null;
+  vehicle: {
+    id: number;
+    name: string;
+    type: string;
+    image: string | null;
+  } | null;
+  price: number;
   name: string;
-
   email: string;
-
   phoneNumber: string;
-
   country: string;
-
   whatsapp: string;
-
   arrivalDate: string;
-
   passengers: number;
-
   clientMessage: string;
-
   adminNote: string | null;
-
   status: BookingStatus;
-
   createdAt: string;
-
   updatedAt: string;
 }
 
