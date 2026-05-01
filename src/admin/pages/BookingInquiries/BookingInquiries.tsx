@@ -48,7 +48,8 @@ import {
     MessageSquare,
     StickyNote,
     Check,
-    TrendingUp
+    TrendingUp,
+    Car
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -507,18 +508,25 @@ export default function BookingInquiries() {
                             </SheetDescription>
                             
                             {/* Header Section */}
-                            <div className="flex flex-col gap-4">
+                            <div className="relative -mx-6 -mt-6 mb-6 px-6 py-8 bg-muted/30 border-b">
                                 <div className="flex items-start justify-between pr-10">
-                                    <div className="space-y-1">
+                                    <div className="space-y-2">
                                         <h2 className="text-3xl font-extrabold tracking-tight break-words text-foreground">
                                             {selectedInquiry.name}
                                         </h2>
-                                        <div className="flex items-center gap-2 text-muted-foreground">
-                                            <Globe className="h-4 w-4" />
-                                            <span className="font-medium">{selectedInquiry.country}</span>
-                                            <span className="text-border">•</span>
-                                            <Users className="h-4 w-4" />
-                                            <span className="font-medium">{selectedInquiry.passengers} Passengers</span>
+                                        <div className="flex flex-wrap items-center gap-3">
+                                            <div className="flex items-center gap-1.5 bg-background px-2.5 py-1 rounded-full border shadow-sm text-xs font-semibold text-muted-foreground">
+                                                <Globe className="h-3.5 w-3.5 text-primary" />
+                                                {selectedInquiry.country}
+                                            </div>
+                                            <div className="flex items-center gap-1.5 bg-background px-2.5 py-1 rounded-full border shadow-sm text-xs font-semibold text-muted-foreground">
+                                                <Users className="h-3.5 w-3.5 text-primary" />
+                                                {selectedInquiry.passengers} Passengers
+                                            </div>
+                                            <div className="flex items-center gap-1.5 bg-background px-2.5 py-1 rounded-full border shadow-sm text-xs font-semibold text-muted-foreground">
+                                                <CalendarRange className="h-3.5 w-3.5 text-primary" />
+                                                ID: #{selectedInquiry.id}
+                                            </div>
                                         </div>
                                     </div>
                                     <Select 
@@ -572,19 +580,20 @@ export default function BookingInquiries() {
                                     </a>
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                                 {/* Booking Schedule Card */}
-                                <Card className="border-none bg-muted/20 shadow-none">
-                                    <CardContent className="p-5 space-y-4">
-                                        <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
-                                            <CalendarRange className="h-4 w-4" />
+                                <Card className="border shadow-sm bg-card overflow-hidden">
+                                    <div className="bg-muted/50 px-4 py-2 border-b">
+                                        <div className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest">
+                                            <CalendarRange className="h-3.5 w-3.5" />
                                             Arrival Details
                                         </div>
-                                        <div className="space-y-3">
+                                    </div>
+                                    <CardContent className="p-5">
+                                        <div className="space-y-4">
                                             <div className="flex flex-col">
-                                                <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Arrival Date</span>
-                                                <span className="font-semibold text-base">
+                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Arrival Date</span>
+                                                <span className="font-semibold text-base mt-0.5">
                                                     {new Date(selectedInquiry.arrivalDate).toLocaleDateString(undefined, { 
                                                         month: 'long', 
                                                         day: 'numeric', 
@@ -592,68 +601,73 @@ export default function BookingInquiries() {
                                                     })}
                                                 </span>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider">Passengers</span>
-                                                <span className="font-bold text-lg text-primary">{selectedInquiry.passengers} People</span>
+                                            <div className="pt-3 border-t">
+                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Group Size</span>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <span className="font-bold text-xl text-primary">{selectedInquiry.passengers}</span>
+                                                    <span className="text-sm font-medium text-muted-foreground">Travelers</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </CardContent>
                                 </Card>
 
                                 {/* Package & Price Card */}
-                                <Card className="border-none bg-primary/5 shadow-none overflow-hidden relative">
-                                    <CardContent className="p-5 space-y-4 relative z-10">
-                                        <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
-                                            <TrendingUp className="h-4 w-4" />
+                                <Card className="border shadow-sm bg-primary/5 overflow-hidden">
+                                    <div className="bg-primary/10 px-4 py-2 border-b border-primary/10">
+                                        <div className="flex items-center gap-2 text-primary font-bold text-[10px] uppercase tracking-widest">
+                                            <TrendingUp className="h-3.5 w-3.5" />
                                             Package & Price
                                         </div>
-                                        <div className="space-y-3">
+                                    </div>
+                                    <CardContent className="p-5">
+                                        <div className="space-y-4">
                                             <div className="flex flex-col">
-                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Tour Package</span>
+                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Selected Tour Package</span>
                                                 <span className="font-bold text-sm text-foreground leading-tight mt-1">
-                                                    {selectedInquiry.tourPackage?.name || "Selected Tour Package"}
+                                                    {selectedInquiry.tourPackage?.name || "Standard Tour Package"}
                                                 </span>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Booking Price</span>
-                                                <span className="font-bold text-lg text-primary">USD {selectedInquiry.price.toLocaleString()}</span>
-                                            </div>
-                                            <div className="flex flex-wrap gap-2 text-[10px] text-muted-foreground font-mono">
-                                                <span>PKG_ID: {selectedInquiry.tourPackageId}</span>
+                                            <div className="pt-3 border-t">
+                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Estimated Total</span>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <span className="font-bold text-xl text-primary">USD {selectedInquiry.price.toLocaleString()}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </CardContent>
                                 </Card>
+                            </div>
 
-                                {/* Vehicle Preference Card */}
-                                <Card className="border-none bg-muted shadow-none overflow-hidden group">
-                                    <CardContent className="p-0 space-y-0">
-                                        {selectedInquiry.vehicle?.image ? (
-                                            <div className="relative h-28 w-full bg-muted overflow-hidden">
+                            {/* Vehicle Preference Section */}
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
+                                    <Car className="h-3.5 w-3.5 text-primary" />
+                                    Vehicle Preference
+                                </div>
+                                <Card className="border-primary/10 bg-primary/5 shadow-none overflow-hidden">
+                                    <CardContent className="p-4 flex flex-col sm:flex-row items-center gap-5">
+                                        <div className="w-44 h-32 rounded-xl bg-background flex items-center justify-center shrink-0 border-2 border-primary/5 shadow-sm overflow-hidden">
+                                            {selectedInquiry.vehicle?.image ? (
                                                 <img 
                                                     src={selectedInquiry.vehicle.image} 
                                                     alt={selectedInquiry.vehicle.name} 
-                                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                                    className="w-full h-full object-cover"
                                                 />
-                                                <div className="absolute top-2 left-2">
-                                                    <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">
-                                                        {selectedInquiry.vehicle?.type}
-                                                    </Badge>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className="p-3 bg-muted border-b border-border/50">
-                                                <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">
-                                                    {selectedInquiry.vehicle?.type || "Standard Vehicle"}
-                                                </Badge>
-                                            </div>
-                                        )}
-                                        <div className="p-4 space-y-1 bg-white dark:bg-card">
-                                            <div className="text-sm font-bold text-foreground">
-                                                {selectedInquiry.vehicle?.name || "Vehicle Choice"}
-                                            </div>
-                                            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                                                <span className="font-mono opacity-50">#{selectedInquiry.vehicleId}</span>
+                                            ) : (
+                                                <Car className="h-14 w-14 text-muted-foreground/30" />
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0 text-center sm:text-left space-y-2">
+                                            <Badge variant="outline" className="bg-background border-primary/20 text-primary font-bold text-[10px] uppercase tracking-wider px-3 py-1">
+                                                {selectedInquiry.vehicle?.type || "Vehicle Choice"}
+                                            </Badge>
+                                            <div>
+                                                <p className="font-bold text-base text-foreground leading-none">{selectedInquiry.vehicle?.name || "Standard Vehicle"}</p>
+                                                <p className="text-xs text-muted-foreground mt-2 flex items-center justify-center sm:justify-start gap-1.5">
+                                                    <span className="bg-muted px-1.5 py-0.5 rounded text-[10px] font-mono">ID: #{selectedInquiry.vehicleId}</span>
+                                                    {selectedInquiry.vehicle?.model && <span>• {selectedInquiry.vehicle.model}</span>}
+                                                </p>
                                             </div>
                                         </div>
                                     </CardContent>

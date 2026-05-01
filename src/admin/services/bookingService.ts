@@ -22,6 +22,7 @@ export interface BookingItem {
     id: number;
     name: string;
     type: string;
+    model?: string | null;
     image: string | null;
   } | null;
   price: number;

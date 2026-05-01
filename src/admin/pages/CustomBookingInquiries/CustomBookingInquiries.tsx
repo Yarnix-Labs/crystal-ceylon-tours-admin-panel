@@ -49,7 +49,8 @@ import {
     Check,
     TrendingUp,
     Compass,
-    Activity
+    Activity,
+    Car
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -617,39 +618,35 @@ export default function CustomBookingInquiries() {
                                     </CardContent>
                                 </Card>
 
-                                {/* Vehicle Preference Card */}
-                                <Card className="border-none bg-primary/5 shadow-none overflow-hidden group">
-                                    <CardContent className="p-0 space-y-0">
-                                        {selectedInquiry.vehicle?.image ? (
-                                            <div className="relative h-32 w-full bg-muted overflow-hidden">
-                                                <img 
-                                                    src={selectedInquiry.vehicle.image} 
-                                                    alt={selectedInquiry.vehicle.name} 
-                                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                                                />
-                                                <div className="absolute top-2 left-2">
-                                                    <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">
-                                                        {selectedInquiry.vehicle?.type}
-                                                    </Badge>
-                                                </div>
+                                {/* Vehicle Preference Section */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest px-1">
+                                        <Car className="h-4 w-4" />
+                                        Vehicle Preference
+                                    </div>
+                                    <Card className="border-primary/20 bg-primary/5 shadow-none overflow-hidden">
+                                        <CardContent className="p-4 flex items-center gap-4">
+                                            <div className="w-40 h-28 rounded-lg bg-background flex items-center justify-center shrink-0 border overflow-hidden">
+                                                {selectedInquiry.vehicle?.image ? (
+                                                    <img 
+                                                        src={selectedInquiry.vehicle.image} 
+                                                        alt={selectedInquiry.vehicle.name} 
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <Car className="h-12 w-12 text-muted-foreground" />
+                                                )}
                                             </div>
-                                        ) : (
-                                            <div className="p-4 bg-primary/5 border-b border-border/50">
-                                                <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">
+                                            <div className="flex-1 min-w-0">
+                                                <Badge className="bg-primary text-white border-none shadow-sm px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider mb-2">
                                                     {selectedInquiry.vehicle?.type}
                                                 </Badge>
+                                                <p className="font-bold text-base leading-tight">{selectedInquiry.vehicle?.name}</p>
+                                                <p className="text-xs text-muted-foreground mt-1">Vehicle ID: #{selectedInquiry.vehicleId}</p>
                                             </div>
-                                        )}
-                                        <div className="p-4 space-y-1">
-                                            <div className="text-sm font-bold text-foreground">
-                                                {selectedInquiry.vehicle?.name}
-                                            </div>
-                                            <div className="flex items-center justify-end text-[11px] text-muted-foreground">
-                                                <span className="font-mono opacity-50">#{selectedInquiry.vehicleId}</span>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                        </CardContent>
+                                    </Card>
+                                </div>
                             </div>
 
                             {/* Special Requests */}

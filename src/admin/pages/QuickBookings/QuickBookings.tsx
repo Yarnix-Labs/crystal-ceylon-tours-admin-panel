@@ -632,7 +632,7 @@ export default function QuickBookings() {
                                 </h3>
                                 <Card className="border-primary/20 bg-primary/5">
                                     <CardContent className="p-4 flex items-center gap-4">
-                                        <div className="w-20 h-20 rounded-lg bg-background flex items-center justify-center shrink-0 border overflow-hidden">
+                                        <div className="w-40 h-28 rounded-lg bg-background flex items-center justify-center shrink-0 border overflow-hidden">
                                             {selectedBooking.vehicle.image ? (
                                                 <img 
                                                     src={selectedBooking.vehicle.image} 
@@ -640,12 +640,12 @@ export default function QuickBookings() {
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (
-                                                <Car className="h-10 w-10 text-muted-foreground" />
+                                                <Car className="h-12 w-12 text-muted-foreground" />
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-bold text-lg">{selectedBooking.vehicle.type}</p>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="font-bold text-base">{selectedBooking.vehicle.type}</p>
+                                            <p className="text-[13px] text-muted-foreground">
                                                 {selectedBooking.vehicle.name}
                                                 {selectedBooking.vehicle.model && ` • ${selectedBooking.vehicle.model}`}
                                             </p>
