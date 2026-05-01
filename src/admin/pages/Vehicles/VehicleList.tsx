@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
     Table, 
     TableBody, 
@@ -12,7 +13,6 @@ import {
     CardContent, 
     CardHeader, 
     CardTitle, 
-    CardDescription 
 } from "@/components/ui/card";
 import { 
     Sheet, 
@@ -20,22 +20,10 @@ import {
     SheetHeader, 
     SheetTitle, 
     SheetDescription,
-    SheetFooter
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { 
-    Dialog, 
-    DialogContent, 
-    DialogHeader, 
-    DialogTitle, 
-    DialogDescription,
-    DialogFooter
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
     Car, 
     Users, 
@@ -52,37 +40,21 @@ import {
     Settings,
     Image as ImageIcon,
     Pencil,
-    X
 } from "lucide-react";
-import { vehicleService, VehicleItem, VehicleStatus } from "@/admin/services/vehicleService";
+import { vehicleService, VehicleItem } from "@/admin/services/vehicleService";
 import { Loader } from "@/admin/components/ui/Loader";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
 export default function VehicleList() {
+    const navigate = useNavigate();
     const [vehicles, setVehicles] = useState<VehicleItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleItem | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
-    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [editingVehicle, setEditingVehicle] = useState<Partial<VehicleItem> | null>(null);
-
-    // Form State
-    const [formData, setFormData] = useState<Partial<VehicleItem>>({
-        name: "",
-        type: "",
-        model: "",
-        passengers: 1,
-        price: 0,
-        description: "",
-        features: [],
-        images: [],
-        status: "ACTIVE"
-    });
 
     useEffect(() => {
         fetchVehicles();
@@ -120,56 +92,11 @@ export default function VehicleList() {
     };
 
     const handleOpenAddModal = () => {
-        setEditingVehicle(null);
-        setFormData({
-            name: "",
-            type: "",
-            model: "",
-            passengers: 1,
-            price: 0,
-            description: "",
-            features: [],
-            images: [],
-            status: "ACTIVE"
-        });
-        setIsFormModalOpen(true);
+        navigate('/dashboard/vehicles/new');
     };
 
     const handleOpenEditModal = (vehicle: VehicleItem) => {
-        setEditingVehicle(vehicle);
-        setFormData(vehicle);
-        setIsFormModalOpen(true);
-        setIsSheetOpen(false); // Close detail sheet if open
-    };
-
-    const handleSaveVehicle = async () => {
-        if (!formData.name || !formData.type || !formData.price) {
-            toast.error("Please fill in all required fields (Name, Type, Price)");
-            return;
-        }
-
-        setIsSaving(true);
-        try {
-            if (editingVehicle) {
-                const response = await vehicleService.update(editingVehicle.id!, formData);
-                if (response.success) {
-                    toast.success("Vehicle updated successfully");
-                    setVehicles(prev => prev.map(v => v.id === editingVehicle.id ? response.data : v));
-                }
-            } else {
-                const response = await vehicleService.create(formData);
-                if (response.success) {
-                    toast.success("Vehicle created successfully");
-                    setVehicles(prev => [response.data, ...prev]);
-                }
-            }
-            setIsFormModalOpen(false);
-        } catch (error) {
-            console.error("Error saving vehicle:", error);
-            toast.error("Failed to save vehicle");
-        } finally {
-            setIsSaving(false);
-        }
+        navigate(`/dashboard/vehicles/${vehicle.id}`);
     };
 
     const filteredVehicles = vehicles.filter(v => 
@@ -443,159 +370,6 @@ export default function VehicleList() {
                     )}
                 </SheetContent>
             </Sheet>
-
-            {/* Form Dialog */}
-            <Dialog open={isFormModalOpen} onOpenChange={setIsFormModalOpen}>
-                <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold">
-                            {editingVehicle ? "Edit Vehicle" : "Add New Vehicle"}
-                        </DialogTitle>
-                        <DialogDescription>
-                            Enter the details for your tour vehicle. All fields with * are required.
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <div className="grid gap-6 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Vehicle Name *</Label>
-                                <Input 
-                                    id="name" 
-                                    placeholder="e.g. Toyota Commuter High" 
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="type">Vehicle Type *</Label>
-                                <Input 
-                                    id="type" 
-                                    placeholder="e.g. Van, Car, Mini-Bus" 
-                                    value={formData.type}
-                                    onChange={(e) => setFormData({...formData, type: e.target.value})}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="model">Model</Label>
-                                <Input 
-                                    id="model" 
-                                    placeholder="e.g. KDH-2015" 
-                                    value={formData.model}
-                                    onChange={(e) => setFormData({...formData, model: e.target.value})}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="passengers">Capacity *</Label>
-                                <Input 
-                                    id="passengers" 
-                                    type="number"
-                                    min={1}
-                                    value={formData.passengers}
-                                    onChange={(e) => setFormData({...formData, passengers: parseInt(e.target.value)})}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="price">Rate (USD) *</Label>
-                                <Input 
-                                    id="price" 
-                                    type="number"
-                                    min={0}
-                                    value={formData.price}
-                                    onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="status">Vehicle Status</Label>
-                            <Select 
-                                value={formData.status} 
-                                onValueChange={(val: VehicleStatus) => setFormData({...formData, status: val})}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="ACTIVE">Active</SelectItem>
-                                    <SelectItem value="INACTIVE">Inactive</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Description</Label>
-                            <Textarea 
-                                id="description" 
-                                placeholder="Describe the vehicle's condition, best use case, etc." 
-                                className="min-h-[100px]"
-                                value={formData.description}
-                                onChange={(e) => setFormData({...formData, description: e.target.value})}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label>Features (Comma separated)</Label>
-                            <Input 
-                                placeholder="A/C, WIFI, Adjustable Seats, USB Charger" 
-                                value={formData.features?.join(", ")}
-                                onChange={(e) => setFormData({...formData, features: e.target.value.split(",").map(f => f.trim()).filter(f => f !== "")})}
-                            />
-                        </div>
-
-                        <div className="space-y-4">
-                            <Label>Vehicle Images (URLs)</Label>
-                            {formData.images?.map((url, idx) => (
-                                <div key={idx} className="flex gap-2">
-                                    <Input 
-                                        value={url} 
-                                        onChange={(e) => {
-                                            const newImages = [...formData.images!];
-                                            newImages[idx] = e.target.value;
-                                            setFormData({...formData, images: newImages});
-                                        }}
-                                        placeholder="https://example.com/image.jpg"
-                                    />
-                                    <Button 
-                                        variant="outline" 
-                                        size="icon" 
-                                        onClick={() => {
-                                            const newImages = formData.images!.filter((_, i) => i !== idx);
-                                            setFormData({...formData, images: newImages});
-                                        }}
-                                    >
-                                        <X className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            ))}
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="w-full border-dashed"
-                                onClick={() => setFormData({...formData, images: [...(formData.images || []), ""]})}
-                            >
-                                <Plus className="h-4 w-4 mr-2" /> Add Image URL
-                            </Button>
-                        </div>
-                    </div>
-
-                    <DialogFooter className="gap-2 sm:gap-0">
-                        <Button variant="ghost" onClick={() => setIsFormModalOpen(false)}>
-                            Cancel
-                        </Button>
-                        <Button 
-                            className="bg-primary text-white hover:bg-primary/90 min-w-[120px]" 
-                            onClick={handleSaveVehicle}
-                            disabled={isSaving}
-                        >
-                            {isSaving ? "Saving..." : editingVehicle ? "Save Changes" : "Create Vehicle"}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }

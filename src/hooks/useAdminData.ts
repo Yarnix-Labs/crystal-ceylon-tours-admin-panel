@@ -7,6 +7,7 @@ import { thingsToDoService } from "@/admin/services/thingsToDoService";
 import { galleryService } from "@/admin/services/galleryService";
 import { reviewService, type ReviewStatus } from "@/admin/services/reviewService";
 import { profileService } from "@/admin/services/profileService";
+import { vehicleService } from "@/admin/services/vehicleService";
 import { toast } from "sonner";
 
 // --- Tours ---
@@ -513,4 +514,50 @@ export const useProfileMutations = () => {
     });
 
     return { updateMutation, uploadImageMutation, changePasswordMutation };
+};
+
+// --- Vehicles ---
+export const useVehicles = () => {
+    return useQuery({
+        queryKey: ["vehicles"],
+        queryFn: () => vehicleService.getAll(),
+    });
+};
+
+export const useVehicle = (id: string | number | undefined) => {
+    return useQuery({
+        queryKey: ["vehicles", id],
+        queryFn: () => (id ? vehicleService.getById(id) : null),
+        enabled: !!id && id !== "new",
+    });
+};
+
+export const useVehicleMutations = () => {
+    const queryClient = useQueryClient();
+
+    const createMutation = useMutation({
+        mutationFn: (data: any) => vehicleService.create(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+            toast.success("Vehicle created successfully");
+        },
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string | number; data: any }) => vehicleService.update(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+            toast.success("Vehicle updated successfully");
+        },
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string | number) => vehicleService.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+            toast.success("Vehicle deleted successfully");
+        },
+    });
+
+    return { createMutation, updateMutation, deleteMutation };
 };

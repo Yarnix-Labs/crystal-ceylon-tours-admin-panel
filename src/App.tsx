@@ -61,6 +61,7 @@ const QuickBookings = lazy(() => import("./admin/pages/QuickBookings/QuickBookin
 const SubmitReview = lazy(() => import("./pages/SubmitReview"));
 const SupportDesk = lazy(() => import("./admin/pages/SupportDesk")); // Route not in use
 const VehicleList = lazy(() => import("./admin/pages/Vehicles/VehicleList"));
+const VehicleForm = lazy(() => import("./admin/pages/Vehicles/VehicleForm"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -149,6 +150,8 @@ const App = () => {
                   {/* Media Library */}
                   <Route path="media" element={<MediaLibrary />} />
                   <Route path="vehicles" element={<VehicleList />} />
+                  <Route path="vehicles/new" element={<VehicleForm />} />
+                  <Route path="vehicles/:id" element={<VehicleForm />} />
                   
                   {/* Customer Reviews */}
                   <Route path="reviews" element={<CustomerReviews />} />
