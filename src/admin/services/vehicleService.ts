@@ -2,11 +2,6 @@ import axiosInstance from "@/api";
 import { ENDPOINTS } from "@/api/endpoints";
 
 /**
- * Vehicle Status type
- */
-export type VehicleStatus = "ACTIVE" | "INACTIVE";
-
-/**
  * Vehicle item interface
  */
 export interface VehicleItem {
@@ -19,7 +14,6 @@ export interface VehicleItem {
   description: string;
   images: string[];
   price: number;
-  status: VehicleStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,6 +26,14 @@ export interface VehicleListResponse {
   statusCode: number;
   message: string;
   data: VehicleItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
   timestamp: string;
   path: string;
 }
@@ -55,8 +57,8 @@ export const vehicleService = {
   /**
    * GET /vehicles
    */
-  async getAll(): Promise<VehicleListResponse> {
-    const { data } = await axiosInstance.get(ENDPOINTS.vehicles);
+  async getAll(page: number = 1): Promise<VehicleListResponse> {
+    const { data } = await axiosInstance.get(`${ENDPOINTS.vehicles}?page=${page}`);
     return data;
   },
 

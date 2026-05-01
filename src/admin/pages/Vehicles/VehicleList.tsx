@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { 
     Table, 
     TableBody, 
@@ -40,59 +41,43 @@ import {
     Settings,
     Image as ImageIcon,
     Pencil,
+    ChevronLeft,
+    ChevronRight,
+    ChevronsLeft,
+    ChevronsRight,
 } from "lucide-react";
 import { vehicleService, VehicleItem } from "@/admin/services/vehicleService";
 import { Loader } from "@/admin/components/ui/Loader";
+import { DeleteDialog } from "@/admin/components/ui/DeleteDialog";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+import { useVehicles, useVehicleMutations } from "@/hooks/useAdminData";
+
 export default function VehicleList() {
     const navigate = useNavigate();
-    const [vehicles, setVehicles] = useState<VehicleItem[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const { data: response, isLoading, isFetching } = useVehicles(currentPage);
+    const { deleteMutation } = useVehicleMutations();
+    
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleItem | null>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
 
-    useEffect(() => {
-        fetchVehicles();
-    }, []);
+    const vehicles = response?.data || [];
+    const meta = response?.meta;
 
-    const fetchVehicles = async () => {
-        setIsLoading(true);
-        try {
-            const response = await vehicleService.getAll();
-            if (response.success) {
-                setVehicles(response.data);
-            }
-        } catch (error) {
-            console.error("Error fetching vehicles:", error);
-            toast.error("Failed to load vehicles");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleDelete = async (id: number) => {
-        if (!confirm("Are you sure you want to delete this vehicle?")) return;
+    const handleDelete = async () => {
+        if (!deleteId) return;
         
-        setIsDeleting(true);
-        try {
-            await vehicleService.delete(id);
-            toast.success("Vehicle deleted successfully");
-            setVehicles(prev => prev.filter(v => v.id !== id));
-            setIsSheetOpen(false);
-        } catch (error) {
-            toast.error("Failed to delete vehicle");
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
-    const handleOpenAddModal = () => {
-        navigate('/dashboard/vehicles/new');
+        deleteMutation.mutate(deleteId, {
+            onSuccess: () => {
+                setDeleteId(null);
+                setIsSheetOpen(false);
+            }
+        });
     };
 
     const handleOpenEditModal = (vehicle: VehicleItem) => {
@@ -105,19 +90,34 @@ export default function VehicleList() {
         v.model.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const queryClient = useQueryClient();
+
     return (
         <div className="space-y-6">
+            {/* Delete Loader Overlay */}
+            {deleteMutation.isPending && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                    <div className="bg-background rounded-lg p-8 flex flex-col items-center gap-4 shadow-xl">
+                        <Loader size="xl" />
+                        <p className="text-lg font-semibold text-foreground">
+                            Deleting vehicle...
+                        </p>
+                        <p className="text-sm text-muted-foreground">Please wait</p>
+                    </div>
+                </div>
+            )}
+
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Vehicles</h1>
                     <p className="text-muted-foreground">Manage your tour fleet and vehicle details.</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="outline" onClick={fetchVehicles} disabled={isLoading}>
-                        <RefreshCw className={cn("h-4 w-4 mr-2", isLoading && "animate-spin")} />
+                    <Button variant="outline" onClick={() => queryClient.invalidateQueries({ queryKey: ["vehicles"] })} disabled={isLoading}>
+                        <RefreshCw className={cn("h-4 w-4 mr-2", isFetching && "animate-spin")} />
                         Refresh
                     </Button>
-                    <Button className="bg-[#fbb03b] hover:bg-[#d98d1a] text-white" onClick={handleOpenAddModal}>
+                    <Button className="bg-[#fbb03b] hover:bg-[#d98d1a] text-white" onClick={() => navigate('/dashboard/vehicles/new')}>
                         <Plus className="h-4 w-4 mr-2" />
                         Add Vehicle
                     </Button>
@@ -167,7 +167,6 @@ export default function VehicleList() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-muted/30">
-                                    <TableHead className="w-[80px]">Status</TableHead>
                                     <TableHead>Vehicle Name</TableHead>
                                     <TableHead>Type</TableHead>
                                     <TableHead>Model</TableHead>
@@ -179,17 +178,6 @@ export default function VehicleList() {
                             <TableBody>
                                 {filteredVehicles.map((vehicle) => (
                                     <TableRow key={vehicle.id} className="hover:bg-muted/10 transition-colors group">
-                                        <TableCell>
-                                            {vehicle.status === 'ACTIVE' ? (
-                                                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1.5 px-2">
-                                                    <CheckCircle2 className="h-3 w-3" /> Active
-                                                </Badge>
-                                            ) : (
-                                                <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200 gap-1.5 px-2">
-                                                    <XCircle className="h-3 w-3" /> Inactive
-                                                </Badge>
-                                            )}
-                                        </TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
                                                 <div className="h-10 w-14 rounded-lg bg-muted flex items-center justify-center overflow-hidden border border-border/50">
@@ -235,6 +223,58 @@ export default function VehicleList() {
                             </TableBody>
                         </Table>
                     )}
+
+                    {/* Pagination */}
+                    {meta && meta.totalPages > 1 && (
+                        <div className="px-6 py-4 border-t flex items-center justify-between bg-muted/20">
+                            <div className="text-sm text-muted-foreground">
+                                Showing <span className="font-medium">{(meta.page - 1) * meta.limit + 1}</span> to <span className="font-medium">{Math.min(meta.page * meta.limit, meta.total)}</span> of <span className="font-medium">{meta.total}</span> vehicles
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="text-sm font-medium">
+                                    Page {meta.page} of {meta.totalPages}
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => setCurrentPage(1)}
+                                        disabled={!meta.hasPreviousPage}
+                                    >
+                                        <ChevronsLeft className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={!meta.hasPreviousPage}
+                                    >
+                                        <ChevronLeft className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => setCurrentPage(p => p + 1)}
+                                        disabled={!meta.hasNextPage}
+                                    >
+                                        <ChevronRight className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={() => setCurrentPage(meta.totalPages)}
+                                        disabled={!meta.hasNextPage}
+                                    >
+                                        <ChevronsRight className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
@@ -245,13 +285,7 @@ export default function VehicleList() {
                         <div className="space-y-8 pb-8">
                             <SheetHeader className="relative pr-10">
                                 <div className="space-y-1">
-                                    <div className="flex items-center gap-2">
-                                        <Badge className={cn(
-                                            "uppercase text-[10px] tracking-widest px-2 py-0.5",
-                                            selectedVehicle.status === 'ACTIVE' ? "bg-green-500" : "bg-slate-500"
-                                        )}>
-                                            {selectedVehicle.status}
-                                        </Badge>
+                                    <div className="space-y-1">
                                         <span className="text-[10px] text-muted-foreground font-mono">ID: #{selectedVehicle.id}</span>
                                     </div>
                                     <SheetTitle className="text-3xl font-extrabold tracking-tight">
@@ -352,8 +386,8 @@ export default function VehicleList() {
                                 <Button
                                     variant="ghost"
                                     className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-xl px-6"
-                                    onClick={() => handleDelete(selectedVehicle.id)}
-                                    disabled={isDeleting}
+                                    onClick={() => setDeleteId(selectedVehicle.id)}
+                                    disabled={deleteMutation.isPending}
                                 >
                                     <Trash2 className="h-4 w-4 mr-2" />
                                     Delete Vehicle
@@ -370,6 +404,14 @@ export default function VehicleList() {
                     )}
                 </SheetContent>
             </Sheet>
+
+            <DeleteDialog 
+                open={deleteId !== null} 
+                onOpenChange={(open) => !open && setDeleteId(null)} 
+                onConfirm={handleDelete}
+                title="Delete Vehicle?"
+                description={`Are you sure you want to delete ${vehicles.find(v => v.id === deleteId)?.name}? This action cannot be undone.`}
+            />
         </div>
     );
 }

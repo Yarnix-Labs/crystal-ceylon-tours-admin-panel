@@ -162,7 +162,6 @@ export default function VehicleForm() {
       description: '',
       features: [] as string[],
       images: [] as string[],
-      status: 'ACTIVE' as 'ACTIVE' | 'INACTIVE'
     }
   });
 
@@ -178,17 +177,30 @@ export default function VehicleForm() {
         description: v.description || '',
         features: v.features || [],
         images: v.images || [],
-        status: v.status || 'ACTIVE'
       });
     }
   }, [vehicle, isEditMode, form]);
 
   const onSubmit = async (data: any) => {
+    // Sanitize data before submission
+    const sanitizedData = {
+      ...data,
+      name: data.name?.trim(),
+      type: data.type?.trim(),
+      model: data.model?.trim(),
+      description: data.description?.trim(),
+      passengers: parseInt(data.passengers.toString(), 10),
+      price: data.price ? parseFloat(data.price.toString()) : undefined,
+    };
+    
+    // Explicitly remove status if it exists in data
+    delete (sanitizedData as any).status;
+
     try {
       if (isEditMode) {
-        await updateMutation.mutateAsync({ id: id!, data });
+        await updateMutation.mutateAsync({ id: id!, data: sanitizedData });
       } else {
-        await createMutation.mutateAsync(data);
+        await createMutation.mutateAsync(sanitizedData);
       }
       navigate('/dashboard/vehicles');
     } catch (error) {
@@ -264,7 +276,10 @@ export default function VehicleForm() {
                   <Controller
                     name="name"
                     control={form.control}
-                    rules={{ required: 'Name is required' }}
+                    rules={{ 
+                      required: 'Name is required',
+                      validate: value => value.trim() !== '' || 'Name cannot be only whitespace'
+                    }}
                     render={({ field, fieldState }) => (
                       <div className="space-y-1">
                         <Input {...field} placeholder="e.g. Toyota Commuter High" className={cn(fieldState.error && "border-destructive")} />
@@ -278,7 +293,10 @@ export default function VehicleForm() {
                   <Controller
                     name="type"
                     control={form.control}
-                    rules={{ required: 'Type is required' }}
+                    rules={{ 
+                      required: 'Type is required',
+                      validate: value => value.trim() !== '' || 'Type cannot be only whitespace'
+                    }}
                     render={({ field, fieldState }) => (
                       <div className="space-y-1">
                         <Input {...field} placeholder="e.g. Van, Car, Mini-Bus" className={cn(fieldState.error && "border-destructive")} />
@@ -291,30 +309,19 @@ export default function VehicleForm() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="model">Model / Version</Label>
+                  <Label htmlFor="model">Model / Version *</Label>
                   <Controller
                     name="model"
                     control={form.control}
-                    render={({ field }) => (
-                      <Input {...field} placeholder="e.g. KDH-2015" />
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <Controller
-                    name="status"
-                    control={form.control}
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="ACTIVE">Active</SelectItem>
-                          <SelectItem value="INACTIVE">Inactive</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    rules={{ 
+                      required: 'Model is required',
+                      validate: value => value.trim() !== '' || 'Model cannot be only whitespace'
+                    }}
+                    render={({ field, fieldState }) => (
+                      <div className="space-y-1">
+                        <Input {...field} placeholder="e.g. KDH-2015" className={cn(fieldState.error && "border-destructive")} />
+                        {fieldState.error && <p className="text-[10px] text-destructive font-medium">{fieldState.error.message}</p>}
+                      </div>
                     )}
                   />
                 </div>
@@ -426,12 +433,12 @@ export default function VehicleForm() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Package className="h-4 w-4 text-muted-foreground" />
-                  <Label htmlFor="price" className="font-bold">Daily Rate (USD) *</Label>
+                  <Label htmlFor="price" className="font-bold">Daily Rate (USD)</Label>
                 </div>
                 <Controller
                   name="price"
                   control={form.control}
-                  rules={{ required: 'Price is required', min: { value: 0, message: 'Price cannot be negative' } }}
+                  rules={{ min: { value: 0, message: 'Price cannot be negative' } }}
                   render={({ field, fieldState }) => (
                     <div className="space-y-1">
                       <div className="relative">

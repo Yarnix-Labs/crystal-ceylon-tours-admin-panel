@@ -517,10 +517,10 @@ export const useProfileMutations = () => {
 };
 
 // --- Vehicles ---
-export const useVehicles = () => {
+export const useVehicles = (page: number = 1) => {
     return useQuery({
-        queryKey: ["vehicles"],
-        queryFn: () => vehicleService.getAll(),
+        queryKey: ["vehicles", page],
+        queryFn: () => vehicleService.getAll(page),
     });
 };
 
