@@ -35,7 +35,7 @@ import { useUser } from "@/admin/context/UserContext";
 import { Loader } from "@/admin/components/ui/Loader";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/logo.jpeg";
+import logo from "@/assets/logo-png.png";
 
 const getAdminPath = (path: string) => (path === "/" ? "/dashboard" : `/dashboard${path}`);
 
@@ -78,10 +78,8 @@ export function AdminSidebar() {
         <Sidebar collapsible="icon" className="border-r-0 bg-[#0f172a] text-white flex flex-col h-screen overflow-hidden">
             <SidebarHeader className="border-b border-white/5 bg-[#0f172a] shrink-0">
                 <div className="flex items-center gap-3 px-3 py-4 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:justify-center transition-all duration-300 ease-in-out">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 shadow-lg shrink-0 group-data-[collapsible=icon]:h-9 group-data-[collapsible=icon]:w-9 transition-all duration-500 ease-out p-1 hover:scale-105 active:scale-95">
-                        <div className="w-full h-full bg-white rounded-lg flex items-center justify-center overflow-hidden shadow-inner">
-                            <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-cover" />
-                        </div>
+                    <div className="flex h-14 w-14 items-center justify-center bg-transparent shrink-0 group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10 transition-all duration-500 ease-out hover:scale-105 active:scale-95">
+                        <img src={logo} alt="Crystal Ceylon Tours" className="h-full w-full object-contain" />
                     </div>
                     <div className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden animate-in fade-in slide-in-from-left-2 duration-500">
                         <span className="truncate font-black tracking-tight text-[13px] flex items-center gap-0.5">
