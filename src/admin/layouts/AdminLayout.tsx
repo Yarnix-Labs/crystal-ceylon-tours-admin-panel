@@ -25,6 +25,7 @@ const pageTitles: Record<string, string> = {
     "notifications": "Notifications",
     "messages": "Contact Messages",
     "bookings": "Booking Inquiries",
+    "vehicles": "Vehicles",
 };
 
 function getPageTitle(pathname: string, basePath: string): string {

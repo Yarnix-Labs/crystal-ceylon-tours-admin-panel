@@ -49,6 +49,7 @@ const menuItems = [
     { title: "Things To Do", path: "/things-to-do", icon: Palmtree },
     { title: "Blog Posts", path: "/blog", icon: FileText },
     { title: "Image Gallery", path: "/media", icon: Image },
+    { title: "Vehicles", path: "/vehicles", icon: Car },
     { title: "Customer Reviews", path: "/reviews", icon: Star },
     { title: "Email List", path: "/email-list", icon: Mail },
 ];

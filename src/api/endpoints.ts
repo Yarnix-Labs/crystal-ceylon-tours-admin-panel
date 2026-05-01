@@ -138,4 +138,9 @@ export const ENDPOINTS = {
   dashboardStats: "/dashboard/stats",
   GoogleAnalytics: "/dashboard/overview",
 
+  // Vehicles
+  vehicles: "/vehicles",
+  vehiclesById: (id: string | number) => `/vehicles/${id}`,
+  vehiclesDelete: (id: string | number) => `/vehicles/${id}`,
+
 } as const;
