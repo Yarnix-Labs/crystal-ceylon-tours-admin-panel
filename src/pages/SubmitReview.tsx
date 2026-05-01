@@ -11,7 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { reviewService, type CreateReviewPayload } from "@/admin/services/reviewService";
-import logo from "@/assets/logo.jpeg";
+import { storageService } from "@/admin/services/storageService";
+import logo from "@/assets/logo-png.png";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -28,6 +29,7 @@ export default function SubmitReview() {
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,7 +42,14 @@ export default function SubmitReview() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     try {
-      await reviewService.create(values as CreateReviewPayload);
+      const payload: CreateReviewPayload = { ...(values as CreateReviewPayload) };
+      
+      if (selectedFile) {
+        const imageUrl = await storageService.uploadProfile(selectedFile);
+        payload.imageUrl = imageUrl;
+      }
+
+      await reviewService.create(payload);
       setIsSubmitted(true);
       toast.success("Review submitted successfully!");
     } catch (error) {
@@ -54,6 +63,7 @@ export default function SubmitReview() {
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => setProfileImage(reader.result as string);
       reader.readAsDataURL(file);

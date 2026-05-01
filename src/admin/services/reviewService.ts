@@ -1,4 +1,4 @@
-import axiosInstance from "@/api";
+import axiosInstance, { publicAxios } from "@/api";
 import { ENDPOINTS } from "@/api/endpoints";
 
 export type ReviewStatus = "PENDING" | "APPROVED" | "REJECTED";
@@ -11,6 +11,7 @@ export interface AdminReview {
     title: string;
     comment: string;
     status?: ReviewStatus;
+    imageUrl?: string;
     createdAt?: string;
     /** Optional API fields */
     customerName?: string;
@@ -24,6 +25,7 @@ export interface CreateReviewPayload {
     rating: number;
     title: string;
     comment: string;
+    imageUrl?: string;
 }
 
 export interface ReviewListResponse {
@@ -82,7 +84,7 @@ class ReviewService {
     }
 
     async create(payload: CreateReviewPayload): Promise<AdminReview> {
-        const { data } = await axiosInstance.post<{ data?: AdminReview }>(ENDPOINTS.reviews, payload);
+        const { data } = await publicAxios.post<{ data?: AdminReview }>(ENDPOINTS.reviews, payload);
         const raw = (data as { data?: AdminReview })?.data ?? (data as AdminReview);
         return this.normalizeReview(raw);
     }

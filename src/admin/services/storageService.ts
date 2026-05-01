@@ -1,4 +1,4 @@
-import axiosInstance from "@/api";
+import axiosInstance, { publicAxios } from "@/api";
 import { ENDPOINTS } from "@/api/endpoints";
 
 export const storageService = {
@@ -17,8 +17,26 @@ export const storageService = {
       },
     });
 
-    // Handle different response formats
-    // Usually { success, data: "https://url.com" } or { success, data: { url: "..." } }
+    if (data.success) {
+      return typeof data.data === 'string' ? data.data : data.data.url;
+    }
+    
+    throw new Error(data.message || "Upload failed");
+  },
+
+  /**
+   * Upload a profile image to the storage.
+   */
+  async uploadProfile(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const { data } = await publicAxios.post(ENDPOINTS.storageUploadProfile, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     if (data.success) {
       return typeof data.data === 'string' ? data.data : data.data.url;
     }

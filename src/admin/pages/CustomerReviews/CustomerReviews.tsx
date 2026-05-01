@@ -384,10 +384,14 @@ export default function CustomerReviews() {
                                             {/* Customer */}
                                             <td className="px-4 py-4 max-w-[220px]">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                                        <span className="text-primary font-semibold text-sm">
-                                                            {(displayName || "?").charAt(0).toUpperCase()}
-                                                        </span>
+                                                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden border border-border/50">
+                                                        {item.imageUrl ? (
+                                                            <img src={item.imageUrl} alt={displayName} className="h-full w-full object-cover" />
+                                                        ) : (
+                                                            <span className="text-primary font-semibold text-sm">
+                                                                {(displayName || "?").charAt(0).toUpperCase()}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     <div className="flex flex-col min-w-0">
                                                         <span className="font-semibold text-sm text-foreground truncate max-w-[160px]">{displayName || "—"}</span>
@@ -537,10 +541,14 @@ export default function CustomerReviews() {
                                     {/* Customer Row */}
                                     <div className="flex items-center justify-between gap-3">
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                                <span className="text-primary font-semibold text-sm">
-                                                    {(displayName || "?").charAt(0).toUpperCase()}
-                                                </span>
+                                            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden border border-border/50">
+                                                {item.imageUrl ? (
+                                                    <img src={item.imageUrl} alt={displayName} className="h-full w-full object-cover" />
+                                                ) : (
+                                                    <span className="text-primary font-semibold text-sm">
+                                                        {(displayName || "?").charAt(0).toUpperCase()}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div className="min-w-0">
                                                 <p className="font-semibold text-sm text-foreground truncate">{displayName}</p>
@@ -693,10 +701,14 @@ export default function CustomerReviews() {
                                 <div className="space-y-1 min-w-0 overflow-hidden">
                                     <h4 className="text-sm font-medium text-muted-foreground">Customer</h4>
                                     <div className="flex items-center gap-2">
-                                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                                            <span className="text-primary font-semibold text-xs">
-                                                {(viewReview.name || viewReview.customerName || "?").charAt(0).toUpperCase()}
-                                            </span>
+                                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 overflow-hidden border border-border/50">
+                                            {viewReview.imageUrl ? (
+                                                <img src={viewReview.imageUrl} alt={viewReview.name || viewReview.customerName || "Customer"} className="h-full w-full object-cover" />
+                                            ) : (
+                                                <span className="text-primary font-semibold text-xs">
+                                                    {(viewReview.name || viewReview.customerName || "?").charAt(0).toUpperCase()}
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="flex flex-col min-w-0 overflow-hidden">
                                             <span className="font-medium text-sm break-all">{viewReview.name || viewReview.customerName || "—"}</span>

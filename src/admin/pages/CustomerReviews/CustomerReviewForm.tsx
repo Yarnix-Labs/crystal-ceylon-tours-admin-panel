@@ -12,6 +12,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useReview, useReviewMutations } from '@/hooks/useAdminData';
+import { storageService } from '@/admin/services/storageService';
+import { cn } from '@/lib/utils';
 
 export default function CustomerReviewForm() {
   const { id } = useParams<{ id: string }>();
@@ -30,10 +32,14 @@ export default function CustomerReviewForm() {
       email: '',
       rating: 5,
       title: '',
-      comment: ''
+      comment: '',
+      imageUrl: ''
     },
     mode: 'onBlur'
   });
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const TITLE_MAX = 100;
   const COMMENT_MAX = 1000;
@@ -47,8 +53,10 @@ export default function CustomerReviewForm() {
         email: review.email || review.customerEmail || '',
         rating: review.rating ?? 5,
         title: review.title || '',
-        comment: review.comment || ''
+        comment: review.comment || '',
+        imageUrl: review.imageUrl || ''
       });
+      setImagePreview(review.imageUrl || null);
     }
   }, [review, form]);
 
@@ -57,7 +65,7 @@ export default function CustomerReviewForm() {
     { id: 'content', label: 'Review Content' }
   ];
 
-  const validateForm = (data: { name: string; email: string; rating: number; title: string; comment: string }) => {
+  const validateForm = (data: { name: string; email: string; rating: number; title: string; comment: string; imageUrl?: string }) => {
     const errors: string[] = [];
     
     if (!data.name?.trim()) {
@@ -89,7 +97,7 @@ export default function CustomerReviewForm() {
     return errors;
   };
 
-  const onSubmit = async (data: { name: string; email: string; rating: number; title: string; comment: string }) => {
+  const onSubmit = async (data: { name: string; email: string; rating: number; title: string; comment: string; imageUrl?: string }) => {
     const errors = validateForm(data);
     
     if (errors.length > 0) {
@@ -97,13 +105,24 @@ export default function CustomerReviewForm() {
       return;
     }
     
-    const payload = {
+    const payload: any = {
       name: data.name.trim(),
       email: data.email.trim(),
       rating: Number(data.rating),
       title: data.title.trim(),
-      comment: data.comment.trim()
+      comment: data.comment.trim(),
+      imageUrl: data.imageUrl
     };
+
+    if (selectedFile) {
+      try {
+        const uploadedUrl = await storageService.uploadProfile(selectedFile);
+        payload.imageUrl = uploadedUrl;
+      } catch (error) {
+        toast.error('Failed to upload image');
+        return;
+      }
+    }
 
     if (isEditMode && id) {
       updateMutation.mutate(
@@ -181,6 +200,63 @@ export default function CustomerReviewForm() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
+              {/* Profile Image Upload */}
+              <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6 pb-2">
+                <div className="relative group">
+                  <div className={cn(
+                    "w-24 h-24 rounded-full overflow-hidden border-2 transition-all duration-300 bg-muted/50 flex items-center justify-center",
+                    imagePreview ? "border-primary" : "border-dashed border-border"
+                  )}>
+                    {imagePreview ? (
+                      <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-8 h-8 text-muted-foreground/50" />
+                    )}
+                  </div>
+                  <label 
+                    htmlFor="profile-upload" 
+                    className="absolute -bottom-1 -right-1 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:scale-110 transition-transform"
+                  >
+                    <Upload className="w-4 h-4" />
+                    <input 
+                      id="profile-upload" 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setSelectedFile(file);
+                          const reader = new FileReader();
+                          reader.onloadend = () => setImagePreview(reader.result as string);
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+                <div className="flex-1 text-center sm:text-left space-y-1">
+                  <h4 className="text-sm font-semibold">Customer Photo</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Upload a profile picture for the reviewer. This makes the testimonial more authentic and visually appealing.
+                  </p>
+                  {imagePreview && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 mt-1"
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setImagePreview(null);
+                        form.setValue('imageUrl', '');
+                      }}
+                    >
+                      <Trash2 className="w-3 h-3 mr-1" /> Remove Photo
+                    </Button>
+                  )}
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold text-foreground">
